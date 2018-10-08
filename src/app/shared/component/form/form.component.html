@@ -1,0 +1,93 @@
+<form nz-form [formGroup]="form">
+  <div *ngFor="let row of formConfig" nz-row [nzGutter]="nzGutter">
+    <!--默认formConfig第第一项第长度为该form表单的横向宽度-->
+    <ng-container *ngFor="let col of row">
+      <div [hidden]="!col || col.hidden" nz-col [nzSpan]="24 / row.length">
+        <ng-container *ngIf="col">
+          <nz-form-item nzFlex>
+            <nz-form-label [class.label-span]="col.labelSpan" [nzSpan]="col.labelSpan || formAuxConfig.labelSpan" [nzRequired]="isRequired(col)">{{col.label}}</nz-form-label>
+            <nz-form-control [class.input-span]="col.inputSpan" [nzSpan]="col.inputSpan || formAuxConfig.inputSpan">
+              <ng-container *ngIf="formType !== 'view' && col.colType !== 'view'">
+                <ng-container *ngIf="!col.type || col.type === 'text'">
+                  <input nz-input [placeholder]="col.placeholder || '请输入'" [formControlName]="col.field" (ngModelChange)="changeControl()">
+                </ng-container>
+                <ng-container *ngIf="col.type && col.type !== 'text'">
+                  <ng-container [ngSwitch]="col.type">
+                    <!--普通选择框-->
+                    <ng-container *ngSwitchCase="'select'">
+                      <nz-select [nzPlaceHolder]="col.placeholder || '请选择'" [nzMode]="col.mode || 'default'" [formControlName]="col.field" (ngModelChange)="changeControl()" nzAllowClear nzShowSearch [nzServerSearch]="true" (nzOnSearch)="onSearchSelect(col, $event)">
+                        <nz-option *ngFor="let option of col.list || []" [nzValue]="option[col.nzValueField || 'code']" [nzLabel]="getNzLabel(option, col)"></nz-option>
+                      </nz-select>
+                    </ng-container>
+                    <!--普通switch-->
+                    <ng-container *ngSwitchCase="'switch'">
+                      <nz-switch [formControlName]="col.field" (ngModelChange)="changeControl()" [nzCheckedChildren]="col.nzCheckedChildren || ''" [nzUnCheckedChildren]="col.nzUnCheckedChildren || ''"></nz-switch>
+                    </ng-container>
+                    <!--普通文本域-->
+                    <ng-container *ngSwitchCase="'textarea'">
+                      <textarea nz-input [placeholder]="col.placeholder || '请输入'" [formControlName]="col.field" [nzAutosize]="{ minRows: 2, maxRows: 6 }" (ngModelChange)="changeControl()"></textarea>
+                    </ng-container>
+                    <!--普通数字输入框-->
+                    <ng-container *ngSwitchCase="'number'">
+                      <nz-input-number [nzPlaceHolder]="col.placeholder || '请输入'" class="w" [formControlName]="col.field" [nzMin]="0" (ngModelChange)="changeControl()"></nz-input-number>
+                    </ng-container>
+                    <!--普通日期选择框-->
+                    <ng-container *ngSwitchCase="'date'">
+                      <nz-date-picker [nzPlaceHolder]="col.placeholder || '请选择日期'" [formControlName]="col.field" (ngModelChange)="changeControl()"></nz-date-picker>
+                    </ng-container>
+                    <!--普通日期范围选择框-->
+                    <ng-container *ngSwitchCase="'date-range'">
+                      <nz-range-picker class="w" [formControlName]="col.field" (ngModelChange)="changeControl()"></nz-range-picker>
+                    </ng-container>
+                    <!--普通时间选择框-->
+                    <ng-container *ngSwitchCase="'time'">
+                      <nz-time-picker [nzPlaceHolder]="col.placeholder || '请选择'" [formControlName]="col.field" [nzDefaultOpenValue]="col.defaultValue" (ngModelChange)="changeControl()"></nz-time-picker>
+                    </ng-container>
+                    <!--普通文件选择框-->
+                    <ng-container *ngSwitchCase="'file'">
+                      <input type="file" multiple #file hidden (change)="fileChange(file, col)">
+                      <button nz-button (click)="file.click()" [disabled]="col.disabled || formType === 'disable'">选择文件</button>
+                      <span class="text-secondary">
+                        <span class="pl10" *ngFor="let f of file.files">{{f.name}}</span>
+                      </span>
+                    </ng-container>
+                    <!--普通单选框-->
+                    <ng-container *ngSwitchCase="'radio'">
+                      <nz-radio-group [formControlName]="col.field" (ngModelChange)="changeControl()">
+                        <ng-container *ngIf="col.list">
+                          <label nz-radio [nzValue]="o.value" *ngFor="let o of col.list">{{o.label}}</label>
+                        </ng-container>
+                        <ng-container *ngIf="!col.list">
+                          <label nz-radio [nzValue]="1">是</label>
+                          <label nz-radio [nzValue]="0">否</label>
+                        </ng-container>
+                      </nz-radio-group>
+                    </ng-container>
+                    <!--普通多选框-->
+                    <ng-container *ngSwitchCase="'checkbox'">
+
+                    </ng-container>
+                    <!--普通多选框-->
+                    <ng-container *ngSwitchCase="'checkboxes'">
+                      <nz-checkbox-group [formControlName]="col.field" (ngModelChange)="changeControl()"></nz-checkbox-group>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </ng-container>
+              <ng-container *ngIf="formType === 'view' || col.colType === 'view'">
+                <span>{{col.view ? getViewValue(col) : $(col.field)}}</span>
+              </ng-container>
+              <ng-container *ngIf="col.validators">
+                <ng-container *ngFor="let v of col.validators">
+                  <nz-form-explain *ngIf="$control(col.field).dirty && $control(col.field).hasError(v.type)">
+                    {{v.text || getValidatorText(v)}}
+                  </nz-form-explain>
+                </ng-container>
+              </ng-container>
+            </nz-form-control>
+          </nz-form-item>
+        </ng-container>
+      </div>
+    </ng-container>
+  </div>
+</form>

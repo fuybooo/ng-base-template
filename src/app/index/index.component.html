@@ -1,0 +1,22 @@
+<div class="login-page">
+  <div class="login-header">
+    <div class="login-logo-box">
+      <div class="logo-img"></div>
+      <div class="logo-text">{{logoText}}</div>
+    </div>
+    <div class="login-tel">联系我们：400-888-8888</div>
+  </div>
+  <div class="login-body">
+    <form [formGroup]="form">
+      <div>
+        <input type="text" formControlName="account" placeholder="请输入用户名" nz-input>
+      </div>
+      <div>
+        <input type="password" formControlName="password" placeholder="请输入密码" nz-input>
+      </div>
+      <div>
+        <button type="button" nz-button nzBlock [nzType]="'primary'" (click)="login()">登录</button>
+      </div>
+    </form>
+  </div>
+</div>

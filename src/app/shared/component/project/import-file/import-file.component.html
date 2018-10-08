@@ -1,0 +1,13 @@
+<div nz-row>
+  <div nz-col [nzSpan]="18">
+    <input type="file" #file hidden (change)="fileChange(file)">
+    <button nz-button [nzType]="'primary'" (click)="file.click()">选择文件</button>
+    <span class="ml20 text-secondary">请选择后缀为{{suffixList.join('、')}}的文件。</span>
+  </div>
+  <div nz-col [nzSpan]="6" class="tar">
+    <button nz-button (click)="downTemplate()">下载模板</button>
+  </div>
+</div>
+<div class="mt20" *ngIf="fileName">
+  <span class="text-secondary">已选文件：</span><span>{{fileName}}</span>
+</div>

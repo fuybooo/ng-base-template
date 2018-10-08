@@ -1,0 +1,92 @@
+<span class="flex-box jcc">
+  <!--使用formatter函数渲染-->
+  <ng-container *ngIf="col.formatter">
+    <!--使用columns中的formatter函数的返回值渲染-->
+    <span *ngIf="isNotString(col.formatter)">{{getFormatText(col, data)}}</span>
+    <!--使用组件进行渲染 —— 需要使用html辅助渲染的值-->
+    <app-table-formatter *ngIf="!isNotString(col.formatter)" [col]="col" [data]="data" [emitEvent]="emitEvent"></app-table-formatter>
+  </ng-container>
+  <!--使用非formatter渲染-->
+  <ng-container *ngIf="!col.formatter">
+    <!--使用field渲染 —— 大多数的通用情况-->
+    <ng-container *ngIf="col.field">
+      <ng-container *ngIf="col.ellipsis">
+        <span class="ellipsis dib" [title]="data[col.field]"
+          [ngStyle]="{'max-width': col.width}">{{data[col.field]}}</span>
+      </ng-container>
+      <ng-container *ngIf="!col.ellipsis">
+        {{data[col.field]}}
+      </ng-container>
+    </ng-container>
+    <!--通过event渲染 通用事件-->
+    <ng-container *ngIf="col.event">
+      <!--有多个事件-->
+      <ng-container *ngIf="isNotString(col.event)">
+        <ng-container *ngFor="let ev of col.event; index as evi">
+          <!--不是string则说明该字段需要条件进行判断是否显示-->
+          <ng-container *ngIf="isNotString(col.text[evi])">
+            <!--根据type判断是否进行特殊处理-->
+            <ng-container *ngIf="col.text[evi].type">
+              <!--'督办'特殊处理-->
+              <ng-container *ngIf="col.text[evi].type === 'questionHandle'">
+                <nz-popover [nzTitle]="'选择督办方式'" [nzTrigger]="'click'" [(nzVisible)]="popVisible">
+                  <a nz-popover [class.ml20]="evi !== 0">督办</a>
+                  <ng-template #nzTemplate>
+                    <div>
+                      <nz-checkbox-group [(ngModel)]="checkQuestionHandleOptions">
+                      </nz-checkbox-group>
+                    </div>
+                    <div class="mt10">
+                      <button class="small-btn" nz-button (click)="handlePopoverValueCancel()">取消</button>
+                      <button class="small-btn ml20" nz-button [nzType]="'primary'"
+                              (click)="handlePopoverValueOk(col, data, ev)">确定</button>
+                    </div>
+                  </ng-template>
+                </nz-popover>
+              </ng-container>
+              <!--'改为满意'特殊处理-->
+              <ng-container *ngIf="col.text[evi].type === 'changeRate' || col.text[evi].type === 'apply'">
+                <!--根据权限进行判断，再根据状态进行判断-->
+                <ng-container *ngIf="col.text[evi].visible && hasPermission(col.text[evi].type) && shouldVisible(data, col.text[evi].visible, col.text[evi].visibleValueList)">
+                  <a [class.ml20]="evi !== 0" (click)="emitEvent(col, data, ev)">{{col.text[evi].value}}</a>
+                </ng-container>
+              </ng-container>
+            </ng-container>
+            <!--type为特殊处理标志，如果不是特殊处理-->
+            <ng-container *ngIf="!col.text[evi].type">
+              <!--需要根据条件显示的删除-->
+              <ng-container *ngIf="ev === 'delete'">
+                <app-table-formatter [col]="col" [data]="data" [type]="'delete'" [ev]="'delete'"
+                                     [evi]="evi" [emitEvent]="emitEvent"></app-table-formatter>
+              </ng-container>
+              <!--如果事件不为删除-->
+              <a *ngIf="ev !== 'delete'" [class.ml20]="evi !== 0" (click)="emitEvent(col, data, ev)">{{col.text[evi].value}}</a>
+            </ng-container>
+          </ng-container>
+          <!--是字符串，直接显示-->
+          <ng-container *ngIf="!isNotString(col.text[evi])">
+            <!--如果事件为删除-->
+            <ng-container *ngIf="ev === 'delete'">
+              <app-table-formatter [col]="col" [data]="data" [type]="'delete'" [ev]="'delete'"
+                                   [evi]="evi" [emitEvent]="emitEvent"></app-table-formatter>
+            </ng-container>
+            <!--如果事件不是删除-->
+            <ng-container *ngIf="ev !== 'delete'">
+              <a [class.ml20]="evi !== 0" (click)="emitEvent(col, data, ev)">{{col.text[evi]}}</a>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </ng-container>
+      <!--单个事件-->
+      <ng-container *ngIf="!isNotString(col.event)">
+        <ng-container *ngIf="col.event === 'delete'">
+          <app-table-formatter [col]="col" [data]="data" [type]="'delete'" [ev]="'delete'"
+                               [evi]="0" [emitEvent]="emitEvent"></app-table-formatter>
+        </ng-container>
+        <ng-container *ngIf="col.event !== 'delete'">
+          <a (click)="emitEvent(col, data, col.event)">{{col.text}}</a>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</span>

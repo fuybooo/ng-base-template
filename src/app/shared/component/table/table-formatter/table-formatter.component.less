@@ -1,0 +1,47 @@
+@import "../../../../../assets/less/vars";
+.table-status-dot {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 1px solid transparent;
+  border-radius: 100%;
+  &.status-1 {
+    background-color: @color-green;
+  }
+  &.status-2 {
+    background-color: @color-warning;
+  }
+  &.status-3 {
+    background-color: @color-danger;
+  }
+}
+// 任务状态
+.task-status {
+  display: block;
+  width: 30px;
+  height: 30px;
+  border-radius: 100%;
+}
+.task-status-1 {
+  background-color: @color-green;
+}
+.task-status-2 {
+  background-color: @color-warning;
+}
+.task-status-3 {
+  background-color: @color-danger;
+}
+
+.customer-month--2 {
+  color: @color-danger;
+}
+.customer-month--1 {
+  color: @color-green;
+}
+.customer-month-0 {
+  color: @primary-color;
+}
+.customer-month-1 {
+  color: @color-disable;
+}
+

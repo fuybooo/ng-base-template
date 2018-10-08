@@ -1,0 +1,5 @@
+{
+  "port": 2712,
+  "files": ["./src/**/*.{html,less,ts}"],
+  "server": { "baseDir": "./dist/ng-pro-name" }
+}

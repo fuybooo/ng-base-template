@@ -1,0 +1,66 @@
+<!--根据type显示-->
+<ng-container *ngIf="type">
+  <ng-container *ngIf="type === 'delete'">
+    <nz-popover [nzTitle]="'确认删除该数据？'" [nzTrigger]="'click'" [(nzVisible)]="delPopVisible">
+      <a nz-popover [class.ml20]="evi !== 0">删除</a>
+      <ng-template #nzTemplate>
+        <div class="flex-bt mt10">
+          <button [nzSize]="'small'" nz-button (click)="handlePopoverValueCancel()">取消</button>
+          <button [nzSize]="'small'" nz-button [nzType]="'primary'"
+                  (click)="handlePopoverValueOk(col, data, ev)">确定</button>
+        </div>
+      </ng-template>
+    </nz-popover>
+  </ng-container>
+</ng-container>
+<!--根据formatter显示不同的内容-->
+<ng-container *ngIf="!type">
+  <!--显示状态-->
+  <ng-container *ngIf="col.formatter === 'task-status'">
+    <div [ngSwitch]="getTaskStatus(data)">
+      <span *ngSwitchCase="'1'" class="task-status task-status-1" title="绿灯"></span>
+      <span *ngSwitchCase="'2'" class="task-status task-status-2" title="黄灯"></span>
+      <span *ngSwitchCase="'3'" class="task-status task-status-3" title="红灯"></span>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="col.formatter === 'customer-month'">
+    <div [ngSwitch]="data[col.field]">
+      <span *ngSwitchCase="-2" class="customer-month customer-month--2" title="未创建"><i class="anticon anticon-close-circle-o"></i></span>
+      <span *ngSwitchCase="-1" class="customer-month customer-month--1" title="已完成"><i class="anticon anticon-check-circle-o"></i></span>
+      <span *ngSwitchCase="0" class="customer-month customer-month-0" title="正在进行中"><i class="anticon anticon-clock-circle-o"></i></span>
+      <span *ngSwitchCase="1" class="customer-month customer-month-1" title="未完成"><i class="anticon anticon-minus-circle-o"></i></span>
+    </div>
+  </ng-container>
+  <ng-container *ngIf="col.formatter === 'edit'">
+    <nz-popover [nzTitle]="'编辑' + col.title" [nzTrigger]="'click'" [(nzVisible)]="popVisible">
+      <span>
+        <span>{{data[col.field]}}</span>
+        <a nz-popover class="ml20 hover-icon">
+          <i class="anticon anticon-edit"></i>
+        </a>
+      </span>
+      <ng-template #nzTemplate>
+        <div>
+          <input class="w" type="text" nz-input [(ngModel)]="popValue" placeholder="请输入">
+        </div>
+        <div class="mt10">
+          <button [nzSize]="'small'" nz-button (click)="handlePopoverValueCancel()">取消</button>
+          <button [nzSize]="'small'" class="ml20" nz-button [nzType]="'primary'"
+                  (click)="handlePopoverValueOk(col, data, 'editPop')">确定</button>
+        </div>
+      </ng-template>
+    </nz-popover>
+  </ng-container>
+  <!--对于有一定特殊性的按钮单独做处理，如果增加属性在table-cell中进行普遍化处理的化会引起不适-->
+  <ng-container *ngIf="col.formatter === 'task-operate'">
+    <ng-container *ngIf="data.issubmit === '1'">
+      <span>已提交</span>
+    </ng-container>
+    <ng-container *ngIf="isShowOpBtn(data)">
+      <a (click)="emit(col, data, 'edit-pop')">编辑</a>
+      <a class="ml20" (click)="emit(col, data, 'submit')">提交</a>
+    </ng-container>
+  </ng-container>
+</ng-container>
+
+

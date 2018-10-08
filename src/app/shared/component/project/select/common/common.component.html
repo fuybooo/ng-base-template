@@ -1,0 +1,15 @@
+<nz-select
+  class="w"
+  [(ngModel)]="selectedItem"
+  nzPlaceHolder="输入内容，进行搜索..."
+  nzAllowClear
+  nzShowSearch
+  [nzServerSearch]="true"
+  (nzOnSearch)="onSearch($event)"
+  (ngModelChange)="onChange($event)"
+>
+  <nz-option
+    *ngFor="let o of list"
+    [nzValue]="o[nzValue]"
+    [nzLabel]="getNzLabel(o)"></nz-option>
+</nz-select>

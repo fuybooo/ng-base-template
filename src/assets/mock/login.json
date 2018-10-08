@@ -1,0 +1,11 @@
+{
+  "code": 200,
+  "msg": "",
+  "data": {
+    "user": {
+      "userName": 1,
+      "orgId": "1"
+    },
+    "token": "1"
+  }
+}

@@ -1,0 +1,100 @@
+@import "vars";
+@border-left: 1px solid @color-border;
+/* 通用的弹性盒布局样式抽取 */
+.flex-box {
+  display: flex!important;
+  flex-direction: row;
+  align-items: center;
+}
+.flex-bt {
+  display: flex!important;
+  justify-content: space-between;
+}
+.jcfe {
+  justify-content: flex-end;
+}
+.jcfs {
+  justify-content: flex-start;
+}
+.jcc {
+  justify-content: center;
+}
+.jcsb {
+  justify-content: space-between;
+}
+.aifs {
+  align-items: flex-start;
+}
+.border {
+  border: 1px solid @color-border;
+}
+.common-page {
+  padding: 20px 15px;
+  .common-header-box {
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px solid @primary-color;
+  }
+}
+.common-panel {
+  border: 1px solid @color-border;
+  padding: 10px 15px;
+  box-shadow: 0 3px 3px 0 @color-border;
+  //&:hover {
+  //  box-shadow: 0 3px 3px 0 @primary-color;
+  //}
+}
+
+.border-left {
+  border-left: @border-left;
+}
+.btn-normal {
+  padding: 0 30px;
+}
+.shape-diamond {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+  background-color: @gray-1;
+}
+tr {
+  .hover-icon {
+    visibility: hidden;
+  }
+  &:hover {
+    .hover-icon {
+      visibility: visible;
+    }
+  }
+}
+.ellipsis {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.color-c-1,
+.color-c-2,
+.color-c-3,
+.color-c-4,
+.color-c-5,
+.color-c-6 {
+  color: #f00;
+}
+.color-c-7 {
+  color: #52c41a;
+}
+.color-c-8 {
+  color: #949494;
+}
+.color-c-9 {
+  color: #2f54eb;
+}
+.color-c-10 {
+  color: #fa541c; // 假期
+}
+.color-c-11 {
+  color: #595959; // 班
+}

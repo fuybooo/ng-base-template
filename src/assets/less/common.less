@@ -1,0 +1,46 @@
+@import "vars";
+/**
+  全局样式
+ */
+body {
+  font-size: 14px;
+  font-family: "Microsoft YaHei", "微软雅黑", "Helvetica Neue", Helvetica, Arial, sans-serif, "PingFang SC", "Hiragino Sans GB";
+  background: @gray-1;
+  color: @text-main;
+  transition: background 1s cubic-bezier(.075, .82, .165, 1);
+  min-width: 1330px;
+  min-height: 500px;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  list-style: none;
+}
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0 1000px @gray-1 inset;
+}
+
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, .23)
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, .35)
+}
+
+::-webkit-scrollbar-thumb:active {
+  background-color: rgba(0, 0, 0, .45)
+}

@@ -1,0 +1,76 @@
+<nz-table #nzTable
+          nzBordered
+          nzShowSizeChanger
+          [nzShowPagination]="tableService.showPagination"
+          [nzFrontPagination]="!tableService.url"
+          [nzData]="tableService.dataSet"
+          [nzLoading]="tableService.loading"
+          [nzTotal]="tableService.total"
+          [(nzPageIndex)]="tableService.current"
+          [(nzPageSize)]="tableService.pageSize"
+          (nzPageIndexChange)="tableService.search()"
+          (nzPageSizeChange)="tableService.search(true)"
+          [nzSize]="tableService.tableSize"
+          [nzShowQuickJumper]="true"
+          [nzHideOnSinglePage]="true"
+          [nzPageSizeOptions]="[5, 10, 20]"
+          class="common-nz-table"
+>
+  <thead>
+  <tr>
+    <th
+      *ngIf="tableService.isCheckbox"
+      nzShowCheckbox
+      [(nzChecked)]="tableService.allChecked"
+      [nzIndeterminate]="tableService.indeterminate"
+      (nzCheckedChange)=" tableService.checkAll($event)"></th>
+    <th *ngIf="tableService.isRadio"></th>
+    <th *ngIf="tableService.isSortCol">序号</th>
+    <th *ngFor="let col of tableService.columns"
+        [nzShowSort]="col.sortable"
+        [nzSortKey]="col.field"
+        [(nzSort)]="tableService.sortMap[col.field || col.sortField]"
+        (nzSortChange)="tableService.sort(col.field || col.sortField,$event)"
+        [nzShowFilter]="col.filterable"
+        [nzFilterMultiple]="!col.filterNotMultiple"
+        [nzFilters]="col.filterArray"
+        (nzFilterChange)="tableService.filterChange(col,$event)"
+    >
+      <span class="dib va-2" [class.w4rem]="col.textLimit" [class.va-11]="col.textLimit"  [class.tac]="col.textLimit">
+        {{col.title || '操作'}}
+      </span>
+    </th>
+  </tr>
+  </thead>
+  <tbody>
+  <ng-container *ngFor="let data of nzTable.data; index as i">
+    <tr (click)="tableService.handleClickRadio(data)"
+        [class.ant-table-row-hover]="data.isSelected"
+        [class.border-bottom-none]="data.isExpand"
+    >
+      <!--控制checkbox的显示-->
+      <td *ngIf="tableService.isCheckbox"
+          nzShowCheckbox
+          [(nzChecked)]="data.checked"
+          (nzCheckedChange)="tableService.refreshStatus($event)"></td>
+      <!--控制radio的显示-->
+      <td *ngIf="tableService.isRadio">
+        <label nz-radio [(ngModel)]="data.isSelected"></label>
+      </td>
+      <!--控制序号的显示-->
+      <td *ngIf="tableService.isSortCol">
+        {{i + 1}}
+      </td>
+      <!--控制每一个cell的显示-->
+      <td *ngFor="let col of columns"
+          [ngStyle]="tableService.getTdStyle(col)">
+        <app-table-cell [tableService]="tableService"
+                             [eventChange]="eventChange"
+                             [tableId]="tableId"
+                             [data]="data"
+                             [col]="col"></app-table-cell>
+      </td>
+    </tr>
+  </ng-container>
+  </tbody>
+</nz-table>
