@@ -19,7 +19,8 @@ export class PermissionComponent implements OnInit {
   columns: Column[] = [
     {
       field: 'name',
-      title: '名称'
+      title: '名称',
+      sortable: true
     },
     {
       field: 'description',

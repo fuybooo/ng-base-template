@@ -63,8 +63,18 @@ export function getSql(url, type, params?) {
             if (!isEmpty(params.kw)) {
               sql += ` and name like '%${params.kw}%' or description like '%${params.kw}%'`;
             }
-            sql += ` order by name asc`;
+            if (params.sortField) {
+              sql += ` order by ${params.sortField} ${params.sortOrder || 'asc'}`;
+            } else {
+              sql += ` order by name asc`;
+            }
+            if (params.pageSize && params.pageNumber) {
+              sql += ` limit ${params.pageSize * (params.pageNumber - 1)}, ${params.pageSize}`;
+            }
             sqls.push(sql);
+            if (params.pageSize && params.pageNumber) {
+              sqls.push(`select count(*) as t from t_permission`);
+            }
           }
           break;
         case AJAXTYPE.DELETE:

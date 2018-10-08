@@ -235,8 +235,10 @@ export class TableService {
     return (res: any) => {
       this.loading = false;
       if (res.code === '200' || res.code === 200 || res.code === 0) {
-        this.dataSet = res.data[this.resultKey] || res.data.results || res.data.result || [];
-        this.total = res.data.total;
+        // this.dataSet = res.data[this.resultKey] || res.data.results || res.data.result || [];
+        this.dataSet = res.data.results[0];
+        // this.total = res.data.total;
+        this.total = res.data.results[1][0].t;
         // 处理特殊事件
         this.handleSpecialTable();
         this.refreshStatus();
@@ -272,7 +274,7 @@ export class TableService {
     } else {
       // 远程数据
       this.commonParams.sortField = field;
-      this.commonParams.sortOrder = value;
+      this.commonParams.sortOrder = value ? value.replace('end', '') : value;
       this.search(true);
     }
     this.sortMap[field] = value;

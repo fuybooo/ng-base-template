@@ -83,10 +83,10 @@ export function getCommonParams(params, method = 'get', isLogin = false) {
   const data = getLoginInfo();
   const sqls = params.sqls;
   // 当前项目所用的分页参数 start
-  params.page = params.pageNumber;
-  params.per_page = params.pageSize;
-  delete params.pageNumber;
-  delete params.pageSize;
+  // params.page = params.pageNumber;
+  // params.per_page = params.pageSize;
+  // delete params.pageNumber;
+  // delete params.pageSize;
   // 当前项目所用的分页参数 start end
   // 删除不需要的参数
   delete params.IIP; // iip 表示 id in params
