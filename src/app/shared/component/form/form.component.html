@@ -19,6 +19,11 @@
                         <nz-option *ngFor="let option of col.list || []" [nzValue]="option[col.nzValueField || 'code']" [nzLabel]="getNzLabel(option, col)"></nz-option>
                       </nz-select>
                     </ng-container>
+                    <!--通用选择框-->
+                    <ng-container *ngSwitchCase="'commonSelect'">
+                      <input hidden [formControlName]="col.field" (ngModelChange)="changeControl()">
+                      <app-select-common (selectedItemChange)="changeSelectedItem($event, col)" [selectedItem]="$(col.field)"></app-select-common>
+                    </ng-container>
                     <!--普通switch-->
                     <ng-container *ngSwitchCase="'switch'">
                       <nz-switch [formControlName]="col.field" (ngModelChange)="changeControl()" [nzCheckedChildren]="col.nzCheckedChildren || ''" [nzUnCheckedChildren]="col.nzUnCheckedChildren || ''"></nz-switch>

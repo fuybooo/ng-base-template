@@ -8,6 +8,8 @@ import {mainRoutes} from './main.router';
 import { SettingComponent } from './setting/setting.component';
 import { PermissionComponent } from './setting/permission/permission.component';
 import { PermissionInfoComponent } from './setting/permission/permission-info/permission-info.component';
+import { PermissionUserComponent } from './setting/permission/permission-user/permission-user.component';
+import { PermissionUserInfoComponent } from './setting/permission/permission-user/permission-user-info/permission-user-info.component';
 
 @NgModule({
   imports: [
@@ -18,6 +20,6 @@ import { PermissionInfoComponent } from './setting/permission/permission-info/pe
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
   ],
   entryComponents: [],
-  declarations: [MainComponent, SettingComponent, PermissionComponent, PermissionInfoComponent]
+  declarations: [MainComponent, SettingComponent, PermissionComponent, PermissionInfoComponent, PermissionUserComponent, PermissionUserInfoComponent]
 })
 export class MainModule { }

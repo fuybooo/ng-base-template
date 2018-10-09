@@ -129,4 +129,13 @@ export class FormComponent implements OnInit, OnDestroy {
       col.onSearch(event);
     }, 300);
   }
+
+  /**
+   * 通用表格改变值时
+   * @param value
+   * @param col
+   */
+  changeSelectedItem(value, col) {
+    this.$control(col.field).setValue(value);
+  }
 }

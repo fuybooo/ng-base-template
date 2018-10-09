@@ -1,5 +1,5 @@
 declare type controlValidatorType = 'required' | 'maxlength' | 'minlength' | 'mistake';
-declare type controlType = undefined | 'text' | 'select' | 'checkbox' | 'checkboxes' | 'radio' | 'textarea' | 'switch' | 'number' | 'date' | 'date-range' | 'time' | 'file' | 'custom';
+declare type controlType = undefined | 'text' | 'select' | 'commonSelect' | 'checkbox' | 'checkboxes' | 'radio' | 'textarea' | 'switch' | 'number' | 'date' | 'date-range' | 'time' | 'file' | 'custom';
 interface ControlValidator {
   type: controlValidatorType; // 验证类型
   value?: RegExp | number; // 验证类型附加值，最大最小值，验证正则等

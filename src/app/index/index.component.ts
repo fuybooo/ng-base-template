@@ -36,7 +36,7 @@ export class IndexComponent implements OnInit {
         // 保存用户信息
         saveLoginInfo(res.data);
         // 登录成功之后，跳转到首页
-        this.router.navigateByUrl('/main');
+        this.router.navigateByUrl('/main/permission/list');
       }
     });
   }

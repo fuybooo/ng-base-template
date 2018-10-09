@@ -182,7 +182,7 @@ export class PermissionInfoComponent implements OnInit {
     });
   }
   back() {
-    this.router.navigateByUrl('/main');
+    this.router.navigateByUrl('/main/permission/list');
   }
 
 }

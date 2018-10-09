@@ -7,6 +7,8 @@ interface CommonUrl {
   login: UrlConfig;
   permission: UrlConfig;
   menu: UrlConfig;
+  permissionUser: UrlConfig;
+  user: UrlConfig;
 }
 /**
  * 请求URL
@@ -23,6 +25,14 @@ export const urls: CommonUrl = {
   },
   menu: {
     url: '/menu',
+    isStatic: false
+  },
+  permissionUser: {
+    url: '/permissionUser',
+    isStatic: false
+  },
+  user: {
+    url: '/user',
     isStatic: false
   },
 };

@@ -1,9 +1,10 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {urls} from '../../../../../core/urls.model';
 import {UtilService} from '../../../../../core/utils/util.service';
 import {BehaviorSubject} from 'rxjs';
 import {debounceTime, switchMap} from 'rxjs/internal/operators';
-import {HttpRes} from '../../../../../core/common.model';
+import {AJAXTYPE, HttpRes} from '../../../../../core/common.model';
+import {getSql} from '../../../../../core/utils/util-sql';
+import {UrlConfig, urls} from '../../../../../core/urls.model';
 
 @Component({
   selector: 'app-select-common',
@@ -13,8 +14,8 @@ export class CommonComponent implements OnInit {
   @Input() nzValue = 'id';
   @Input() nzLabel = 'fn-user';
   @Input() extLabelField = ''; // 额外的数据
-  @Input() valueKey = 'search';
-  @Input() url;
+  @Input() valueKey = 'kw';
+  @Input() url: UrlConfig = urls.user;
   @Input() selectedItem;
   @Output() selectedItemChange = new EventEmitter();
   @Output() extLabelFieldChange = new EventEmitter();
@@ -31,10 +32,13 @@ export class CommonComponent implements OnInit {
     this.onSearch();
   }
   subSearch() {
-    const getList = (value: string) => this.utilService.get(this.url, {[this.valueKey]: value}, {pageNumber: 1, pageSize: 10});
+    const getList = (value: string) => this.utilService.get(this.url, {
+      [this.valueKey]: value,
+      ...getSql(this.url.url, AJAXTYPE.GET, {[this.valueKey]: value})
+    }, {pageNumber: 1, pageSize: 10});
     this.searchChange$.asObservable().pipe(debounceTime(500)).pipe(switchMap(getList)).subscribe((res: HttpRes) => {
       if (res.code === 200 || res.code === 0) {
-        this.list = res.data.result || res.data.results;
+        this.list = res.data.results[0];
       }
     });
   }
@@ -47,7 +51,7 @@ export class CommonComponent implements OnInit {
     }
     if (this.nzLabel.startsWith('fn-')) {
       if (this.nzLabel === 'fn-user') {
-        return o.displayname + '（' + o.username + '）';
+        return o.name + '（' + o.loginname + '）';
       }
     }
     return o[this.nzLabel];

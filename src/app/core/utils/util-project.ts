@@ -71,7 +71,7 @@ export const defaultCommonParams = {
   sortOrder: '',
 };
 function base64Sqls(sqls) {
-  return sqls.map(s => Base64.encode(s));
+  return sqls ? sqls.map(s => Base64.encode(s)) : sqls;
 }
 /**
  * 获取公共参数
