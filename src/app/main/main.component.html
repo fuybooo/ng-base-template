@@ -3,8 +3,54 @@
     <span class="title">Angular示例</span>
     <a (click)="logout()">退出</a>
   </div>
-  <div class="main-content">
-    <app-setting></app-setting>
+  <ul class="main-nav">
+    <li *ngFor="let n of menuTree" (click)="changeNav(n)" class="main-nav-li" [class.active]="n === crtNav">
+      {{n.origin.name}}
+      <div class="border-bottom"></div>
+    </li>
+  </ul>
+  <div class="main-body">
+    <div class="main-side">
+      <ul nz-menu class="main-menu-list" [nzMode]="'inline'" appScrollbar>
+        <ng-container *ngFor="let m of crtNav.children">
+          <li *ngIf="m.children && m.children.length"
+              class="main-menu-li-1"
+              nz-submenu [title]="m.origin.name">
+            <span title>
+              <i class="main-menu-li-i" [ngClass]="m.origin.icon"></i>
+              <span>{{m.origin.name}}</span>
+            </span>
+            <ul>
+              <ng-container *ngFor="let c of m.children">
+                <li *ngIf="!(c.children && c.children.length)"
+                    class="main-menu-li-2"
+                    nz-menu-item
+                    [nzSelected]="c.isActive"
+                    (click)="onClickMenuItem(c)"
+                >
+                  <span>
+                    <span>{{c.origin.name}}</span>
+                  </span>
+                </li>
+              </ng-container>
+            </ul>
+          </li>
+          <li *ngIf="!(m.children && m.children.length)"
+              nz-menu-item
+              class="main-menu-li-1"
+              [nzSelected]="m.isActive"
+              (click)="onClickMenuItem(m)"
+          >
+            <span>
+              <span>{{m.origin.name}}</span>
+            </span>
+          </li>
+        </ng-container>
+      </ul>
+    </div>
+    <div class="main-content">
+      <app-setting></app-setting>
+    </div>
   </div>
 </div>
 

@@ -13,7 +13,8 @@ import {ImportFileComponent} from './component/project/import-file/import-file.c
 import {FormComponent} from './component/form/form.component';
 import {CommonComponent as CommonSelectComponent} from './component/project/select/common/common.component';
 import {UnlessDirective} from './directive/unless.directive';
-import { CommonPageComponent } from './component/project/common-page/common-page.component';
+import {CommonPageComponent} from './component/project/common-page/common-page.component';
+import {CommonInfoPageComponent} from './component/project/common-info-page/common-info-page.component';
 
 @NgModule({
   imports: [
@@ -36,7 +37,8 @@ import { CommonPageComponent } from './component/project/common-page/common-page
     ImportFileComponent,
     FormComponent,
     CommonSelectComponent,
-    CommonPageComponent
+    CommonPageComponent,
+    CommonInfoPageComponent
   ],
   entryComponents: [
     FormComponent,
@@ -60,7 +62,8 @@ import { CommonPageComponent } from './component/project/common-page/common-page
     FormComponent,
     ImportFileComponent,
     CommonSelectComponent,
-    CommonPageComponent
+    CommonPageComponent,
+    CommonInfoPageComponent
   ],
 })
 export class SharedModule {

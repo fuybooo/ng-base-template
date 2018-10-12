@@ -1,5 +1,7 @@
+import {UrlConfig} from '../../../core/urls.model';
+
 declare type controlValidatorType = 'required' | 'maxlength' | 'minlength' | 'mistake';
-declare type controlType = undefined | 'text' | 'select' | 'commonSelect' | 'checkbox' | 'checkboxes' | 'radio' | 'textarea' | 'switch' | 'number' | 'date' | 'date-range' | 'time' | 'file' | 'custom';
+declare type controlType = undefined | 'text' | 'select' | 'commonSelect' | 'checkbox' | 'checkboxes' | 'radio' | 'textarea' | 'switch' | 'number' | 'date' | 'date-range' | 'time' | 'file' | 'custom' | 'label';
 interface ControlValidator {
   type: controlValidatorType; // 验证类型
   value?: RegExp | number; // 验证类型附加值，最大最小值，验证正则等
@@ -18,6 +20,7 @@ export interface FormConfigItem {
   labelSpan?: number;
   inputSpan?: number;
   placeholder?: string;
+  isNotSimpleSet?: boolean; // 是否不需要被简单赋值
   // select
   list?: any[]; // 传入的列表
   nzValueField?: string; // value所在字段
@@ -31,6 +34,10 @@ export interface FormConfigItem {
   nzUnCheckedChildren?: string;
   // custom
   custom?: string; // 自定义下拉框的特殊标志
+  // commonSelect
+  optionLabel?: string; // 下拉框显示的label字段
+  url?: UrlConfig; // 查询下拉框时的url，默认为user
+  special?: string; // 查询下拉框时的特殊参数
 }
 export const FORMEVENT = {
   RESET: 'RESET'
@@ -50,7 +57,7 @@ export function findFormItem(formConfig, field): FormConfigItem {
 export function simpleSetForm(formConfig, formValue) {
   for (const row of formConfig) {
     for (const col of row) {
-      if (col) {
+      if (col && !col.isNotSimpleSet) {
         col.defaultValue = formValue[col.field];
       }
     }

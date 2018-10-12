@@ -15,7 +15,8 @@ export class CommonComponent implements OnInit {
   @Input() nzLabel = 'fn-user';
   @Input() extLabelField = ''; // 额外的数据
   @Input() valueKey = 'kw';
-  @Input() url: UrlConfig = urls.user;
+  @Input() url: UrlConfig = urls.user; // 默认查询用户数据
+  @Input() special;
   @Input() selectedItem;
   @Output() selectedItemChange = new EventEmitter();
   @Output() extLabelFieldChange = new EventEmitter();
@@ -32,10 +33,19 @@ export class CommonComponent implements OnInit {
     this.onSearch();
   }
   subSearch() {
-    const getList = (value: string) => this.utilService.get(this.url, {
-      [this.valueKey]: value,
-      ...getSql(this.url.url, AJAXTYPE.GET, {[this.valueKey]: value})
-    }, {pageNumber: 1, pageSize: 10});
+    const getList = (value: string) => {
+      const params = {
+        [this.valueKey]: value,
+        pageSize: 10,
+        pageNumber: 1,
+        needNotTotal: true,
+        special: this.special
+      };
+      return this.utilService.get(this.url, {
+          ...params,
+        ...getSql(this.url.url, AJAXTYPE.GET, params)
+      }, {pageNumber: 1, pageSize: 10});
+    };
     this.searchChange$.asObservable().pipe(debounceTime(500)).pipe(switchMap(getList)).subscribe((res: HttpRes) => {
       if (res.code === 200 || res.code === 0) {
         this.list = res.data.results[0];

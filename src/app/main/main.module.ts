@@ -10,6 +10,10 @@ import { PermissionComponent } from './setting/permission/permission.component';
 import { PermissionInfoComponent } from './setting/permission/permission-info/permission-info.component';
 import { PermissionUserComponent } from './setting/permission/permission-user/permission-user.component';
 import { PermissionUserInfoComponent } from './setting/permission/permission-user/permission-user-info/permission-user-info.component';
+import { UserComponent } from './user/user.component';
+import { UserInfoComponent } from './user/user-info/user-info.component';
+import { HomeComponent } from './home/home.component';
+import {MenuResolver} from '../shared/guard/menu-resolver.service';
 
 @NgModule({
   imports: [
@@ -18,8 +22,9 @@ import { PermissionUserInfoComponent } from './setting/permission/permission-use
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
+    MenuResolver
   ],
   entryComponents: [],
-  declarations: [MainComponent, SettingComponent, PermissionComponent, PermissionInfoComponent, PermissionUserComponent, PermissionUserInfoComponent]
+  declarations: [MainComponent, SettingComponent, PermissionComponent, PermissionInfoComponent, PermissionUserComponent, PermissionUserInfoComponent, UserComponent, UserInfoComponent, HomeComponent]
 })
 export class MainModule { }

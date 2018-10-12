@@ -4,6 +4,7 @@ import {CoreService} from '../../../core/core.service';
 import {FormConfigItem, FORMEVENT} from './form.model';
 import {getSpecialCharacterValidator} from '../../../core/utils/util-validate';
 import {getPropValue, isEmptyObject} from '../../../core/utils/util-fns';
+import {urls} from '../../../core/urls.model';
 
 @Component({
   selector: 'app-form',
@@ -23,6 +24,7 @@ export class FormComponent implements OnInit, OnDestroy {
   defLabelSpan = 7;
   defSingleInputSpan = 14; // 每行显示一个时 input的宽度
   defMultipleInputSpan = 17; // 每行显示多个时 input的宽度
+  defSelectUrl = urls.user;
   timer;
   subscript;
   constructor(
@@ -137,5 +139,7 @@ export class FormComponent implements OnInit, OnDestroy {
    */
   changeSelectedItem(value, col) {
     this.$control(col.field).setValue(value);
+    this.$control(col.field).markAsDirty();
+    this.changeControl();
   }
 }

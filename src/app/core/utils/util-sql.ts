@@ -1,12 +1,56 @@
 import {urls} from '../urls.model';
 import {guid} from './util-fns';
 import {AJAXTYPE} from '../common.model';
+import {Base64} from 'js-base64';
 
 function isEmpty(o) {
   return o === null || o === '' || o === undefined;
 }
-function getKwStr(fields, kw) {
-  return fields.map(f => `${f} like '%${kw}%'`).join(' or ');
+function getKwStr(fields, params) {
+  let sql = '';
+  if (!isEmpty(params.kw)) {
+    sql = ` and (${fields.map(f => `${f} like '%${params.kw}%'`).join(' or ')})`;
+  }
+  return sql;
+}
+function pushUpdateStr(sqls, params, tableName, excludeFields = []) {
+  let updateColStr = '';
+  for (const p in params) {
+    if (!excludeFields.some(f => f === p)) {
+      updateColStr += ` ${p} = '${params[p]}',`;
+    }
+  }
+  // 如果不修改权限的名称或者描述的话，不需要执行修改语句
+  if (updateColStr) {
+    sqls.push(`update ${tableName} set ${updateColStr.slice(0, -1)} where id = '${params.id}'`);
+  }
+}
+function pushDeleteStr(sqls, params, tableName) {
+  sqls.push(
+    `delete from ${tableName} where id in (${params.idList.map(id => `'${id}'`).join()})`,
+  );
+}
+// 获取特殊条件
+function getSpecialStr(params) {
+  let sql = '';
+  // 只查在permission-user表中不存在的user
+  if (params.special === 'permission-user') {
+    sql = ' and id not in (select userid from t_permission_user)';
+  }
+  return sql;
+}
+function getLimitStr(params) {
+  let sql = '';
+  if (params.pageSize && params.pageNumber) {
+    sql = ` limit ${params.pageSize * (params.pageNumber - 1)}, ${params.pageSize}`;
+  }
+  return sql;
+}
+function pushCount(sqls, params, tableName) {
+  // 是否需要查询总数，默认只要传了分页参数都是需要查询总数的，否则不查总数
+  if (params.pageSize && params.pageNumber && !params.needNotTotal) {
+    sqls.push(`select count(*) as t from ${tableName}`);
+  }
 }
 /**
  * 生成sql语句
@@ -19,23 +63,16 @@ export function getSql(url: string, type, params?) {
   const sqls = [];
   let sql = '';
   switch (url) {
+    case urls.login.url:
+      sqls.push(`select id, loginname, name from t_user where loginname = '${params.loginname}' and pwd = '${Base64.encode(`${params.loginname}${params.password}`)}'`);
+      break;
     case urls.menu.url:
       sqls.push(`select * from t_menu`);
       break;
     case urls.permission.url:
       switch (type) {
         case AJAXTYPE.PUT:
-          let updateColStr = '';
-          for (const p in params) {
-            if (p !== 'menuList' && p !== 'id') {
-              updateColStr += ` ${p} = '${params[p]}',`;
-            }
-          }
-          // 如果不修改权限的名称或者描述的话，不需要执行修改语句
-          if (updateColStr) {
-            sql = `update t_permission set ${updateColStr.slice(0, -1)} where id = '${params.id}'`;
-            sqls.push(sql);
-          }
+          pushUpdateStr(sqls, params, 't_permission', ['menuList', 'id']);
           if (params.menuList.add.length) {
             params.menuList.add.forEach(item => {
               sqls.push(`insert into t_permission_menu values ('${guid()}', '${params.id}', '${item.id}', ${item.isHalf ? 1 : 0})`);
@@ -58,26 +95,19 @@ export function getSql(url: string, type, params?) {
           break;
         case AJAXTYPE.GET:
           if (params.id) {
-            sql = `select * from t_permission where id = '${params.id}'`;
-            sqls.push(sql);
+            sqls.push(`select * from t_permission where id = '${params.id}'`);
             sqls.push(`select pm.menuid as id, pm.ishalf from t_menu m left join t_permission_menu pm on m.id = pm.menuid where permissionid = '${params.id}'`);
           } else {
             sql = `select * from t_permission where 1 = 1`;
-            if (!isEmpty(params.kw)) {
-              sql += ` and ${getKwStr(['name', 'description'], params.kw)}`;
-            }
+            sql += getKwStr(['name', 'description'], params);
             if (params.sortField) {
               sql += ` order by ${params.sortField} ${params.sortOrder || 'asc'}`;
             } else {
               sql += ` order by name asc`;
             }
-            if (params.pageSize && params.pageNumber) {
-              sql += ` limit ${params.pageSize * (params.pageNumber - 1)}, ${params.pageSize}`;
-            }
+            sql += getLimitStr(params);
             sqls.push(sql);
-            if (params.pageSize && params.pageNumber) {
-              sqls.push(`select count(*) as t from t_permission`);
-            }
+            pushCount(sqls, params, 't_permission');
           }
           break;
         case AJAXTYPE.DELETE:
@@ -93,11 +123,10 @@ export function getSql(url: string, type, params?) {
       switch (type) {
         case AJAXTYPE.GET:
           if (params.id) {
+            sqls.push(`select * from t_permission_user where id = '${params.id}'`);
           } else {
-            sql = `select u.name as username, u.loginname, p.name as permission, p.description from t_permission_user pu left join t_permission p on p.id = pu.permissionid left join t_user u on u.id = pu.userid where 1 = 1`;
-            if (!isEmpty(params.kw)) {
-              sql += ` and ${getKwStr(['u.name', 'u.loginname', 'p.name', 'p.description'], params.kw)}`;
-            }
+            sql = `select pu.id, u.name as username, u.loginname, p.name as permission, p.description from t_permission_user pu left join t_permission p on p.id = pu.permissionid left join t_user u on u.id = pu.userid where 1 = 1`;
+            sql += getKwStr(['u.name', 'u.loginname', 'p.name', 'p.description'], params);
             if (params.sortField) {
               let sortField = '';
               if (params.sortField === 'username') {
@@ -113,14 +142,19 @@ export function getSql(url: string, type, params?) {
             } else {
               sql += ` order by u.name asc`;
             }
-            if (params.pageSize && params.pageNumber) {
-              sql += ` limit ${params.pageSize * (params.pageNumber - 1)}, ${params.pageSize}`;
-            }
+            sql += getLimitStr(params);
             sqls.push(sql);
-            if (params.pageSize && params.pageNumber) {
-              sqls.push(`select count(*) as t from t_permission_user`);
-            }
+            pushCount(sqls, params, 't_permission_user');
           }
+          break;
+        case AJAXTYPE.POST:
+          sqls.push(`insert into t_permission_user values ('${guid()}', '${params.permissionid}', '${params.userid}')`);
+          break;
+        case AJAXTYPE.PUT:
+          pushUpdateStr(sqls, params, 't_permission_user', ['userid', 'id']);
+          break;
+        case AJAXTYPE.DELETE:
+          pushDeleteStr(sqls, params, 't_permission_user');
           break;
       }
       break;
@@ -128,24 +162,39 @@ export function getSql(url: string, type, params?) {
       switch (type) {
         case AJAXTYPE.GET:
           if (params.id) {
+            sqls.push(`select * from t_user where id = '${params.id}'`);
+          } else if (params.permissionid) {
+            sqls.push(`select * from t_user u where u.id = (select pu.userid from t_permission_user pu where pu.id = '${params.permissionid}')`);
           } else {
             sql = `select * from t_user where 1 = 1`;
-            if (!isEmpty(params.kw)) {
-              sql += ` and name like '%${params.kw}%'`;
-            }
+            sql += getKwStr(['name', 'loginname'], params);
+            // 增加特殊条件
+            sql += getSpecialStr(params);
             if (params.sortField) {
               sql += ` order by ${params.sortField} ${params.sortOrder || 'asc'}`;
             } else {
               sql += ` order by name asc`;
             }
-            if (params.pageSize && params.pageNumber) {
-              sql += ` limit ${params.pageSize * (params.pageNumber - 1)}, ${params.pageSize}`;
-            }
+            sql += getLimitStr(params);
             sqls.push(sql);
-            if (params.pageSize && params.pageNumber) {
-              sqls.push(`select count(*) as t from t_user`);
-            }
+            pushCount(sqls, params, 't_user');
           }
+          break;
+        case AJAXTYPE.POST:
+          sqls.push(`insert into t_user values('${guid()}', '${params.name}', '${Base64.encode(`${params.loginname}123456`)}', '${params.loginname}')`);
+          break;
+        case AJAXTYPE.PUT:
+          pushUpdateStr(sqls, params, 't_user');
+          break;
+        case AJAXTYPE.DELETE:
+          pushDeleteStr(sqls, params, 't_user');
+          break;
+      }
+      break;
+    case urls.userMenu.url:
+      switch (type) {
+        case AJAXTYPE.GET:
+          sqls.push(`select m.* from t_menu m where m.id in (select pm.menuid from t_permission_menu pm where pm.permissionid = (select pu.permissionid from t_permission_user pu where pu.userid = '${params.userid}'))`);
           break;
       }
       break;

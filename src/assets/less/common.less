@@ -8,10 +8,11 @@ body {
   background: @gray-1;
   color: @text-main;
   transition: background 1s cubic-bezier(.075, .82, .165, 1);
-  min-width: 1330px;
-  min-height: 500px;
+  min-width: @min-width;
+  min-height: @min-height;
 }
-ul {
+ul, ul[_ngcontent-c1],
+li, li[_ngcontent-c1]{
   margin: 0;
   padding: 0;
 }

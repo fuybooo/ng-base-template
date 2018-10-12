@@ -1,0 +1,24 @@
+<div>
+  <div class="f26">{{titleText}}</div>
+  <div nz-row>
+    <div nz-col [nzSpan]="16">
+      <app-form
+        *ngIf="showForm"
+        [formId]="formId"
+        [(form)]="form"
+        [formConfig]="formConfig"
+      ></app-form>
+    </div>
+  </div>
+  <div nz-row class="mt10">
+    <div nz-col [nzSpan]="16">
+      <div nz-row>
+        <div nz-col [nzOffset]="7" [nzSpan]="14" class="pl15i">
+          <button nz-button [nzType]="'primary'" (click)="save()" [disabled]="form.invalid || form.pristine">保存</button>
+          <button nz-button class="ml20i" (click)="back()">返回</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+

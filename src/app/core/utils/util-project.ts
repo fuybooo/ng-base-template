@@ -250,7 +250,7 @@ export function isShowOpBtn(data) {
  */
 export function saveLoginInfo(data) {
   const cookieConfig = {expires: 7};
-  $.cookie('userName', data.userName, cookieConfig);
+  $.cookie('userName', data.name, cookieConfig);
   localStorage.setItem(loginInfoKey, JSON.stringify(data));
 }
 

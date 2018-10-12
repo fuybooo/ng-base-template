@@ -22,7 +22,13 @@
                     <!--通用选择框-->
                     <ng-container *ngSwitchCase="'commonSelect'">
                       <input hidden [formControlName]="col.field" (ngModelChange)="changeControl()">
-                      <app-select-common (selectedItemChange)="changeSelectedItem($event, col)" [selectedItem]="$(col.field)"></app-select-common>
+                      <app-select-common
+                        [nzLabel]="col.optionLabel || 'fn-user'"
+                        [url]="col.url || defSelectUrl"
+                        [special]="col.special"
+                        [selectedItem]="$(col.field)"
+                        (selectedItemChange)="changeSelectedItem($event, col)"
+                      ></app-select-common>
                     </ng-container>
                     <!--普通switch-->
                     <ng-container *ngSwitchCase="'switch'">

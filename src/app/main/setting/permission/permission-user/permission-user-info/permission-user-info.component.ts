@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {guid} from '../../../../../core/utils/util-fns';
-import {FormGroup} from '@angular/forms';
-import {FormConfigItem, FORMEVENT} from '../../../../../shared/component/form/form.model';
-import {ActivatedRoute, Router} from '@angular/router';
+import {FormConfigItem} from '../../../../../shared/component/form/form.model';
+import {urls} from '../../../../../core/urls.model';
+import {ActivatedRoute} from '@angular/router';
+import {UtilService} from '../../../../../core/utils/util.service';
+import {getSql} from '../../../../../core/utils/util-sql';
+import {AJAXTYPE, HttpRes} from '../../../../../core/common.model';
 
 @Component({
   selector: 'app-permission-user-info',
@@ -10,59 +12,65 @@ import {ActivatedRoute, Router} from '@angular/router';
   styleUrls: ['./permission-user-info.component.less']
 })
 export class PermissionUserInfoComponent implements OnInit {
-  op;
-  id;
-  titleText;
-  showForm = false;
-  formId = guid();
-  form = new FormGroup({});
-  formConfig: FormConfigItem[][] = [
+  formConfig: FormConfigItem[][] = [[]];
+  defFormConfig: FormConfigItem[][] = [
     [
       {
         type: 'commonSelect',
         label: '用户',
-        field: 'username',
+        field: 'userid',
         validators: [
           {
             type: 'required'
           }
-        ]
+        ],
+        special: 'permission-user'
       },
     ],
     [
       {
         type: 'commonSelect',
         label: '权限',
-        field: 'permission',
+        field: 'permissionid',
         validators: [
           {
             type: 'required'
           }
-        ]
+        ],
+        optionLabel: 'name',
+        url: urls.permission
       },
     ]
   ];
+  backUrl = '/main/permission-user/list';
+  url = urls.permissionUser;
   constructor(
     private route: ActivatedRoute,
-    private router: Router
+    private util: UtilService
   ) { }
 
   ngOnInit() {
-    this.op = this.route.snapshot.params.op;
-    this.id = this.route.snapshot.params.id;
-    if (this.op === 'add') {
-      this.titleText = '新增';
-      this.showForm = true;
-      // 新增时需要初始化表单
-    } else if (this.op === 'edit') {
-      this.titleText = '编辑';
-      this.showForm = true;
+    const op = this.route.snapshot.params.op;
+    const id = this.route.snapshot.params.id;
+    if (op === 'edit') {
+      const params = {permissionid: id};
+      this.util.get(urls.user, {
+        ...params,
+        ...getSql(urls.user.url, AJAXTYPE.GET, params)
+      }).subscribe((res: HttpRes) => {
+        if (res.code === 200) {
+          this.formConfig = this.defFormConfig;
+          this.formConfig[0][0] = {
+            isNotSimpleSet: true,
+            colType: 'view',
+            label: '用户',
+            field: 'userid',
+            defaultValue: res.data.results[0][0].name
+          };
+        }
+      });
+    } else {
+      this.formConfig = this.defFormConfig;
     }
-  }
-  save() {
-    this.back();
-  }
-  back() {
-    this.router.navigateByUrl('/main/permission-user/list');
   }
 }

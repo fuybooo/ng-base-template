@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {guid} from '../../../../core/utils/util-fns';
 import {FormGroup} from '@angular/forms';
-import {findFormItem, FormConfigItem, FORMEVENT} from '../../../../shared/component/form/form.model';
+import {findFormItem, FormConfigItem, FORMEVENT, simpleSetForm} from '../../../../shared/component/form/form.model';
 import {UtilService} from '../../../../core/utils/util.service';
 import {urls} from '../../../../core/urls.model';
 import {AJAXTYPE, HttpRes} from '../../../../core/common.model';
@@ -85,8 +85,9 @@ export class PermissionInfoComponent implements OnInit {
     }).subscribe((res: HttpRes) => {
       if (res.code === 200) {
         const permission = res.data.results[0][0];
-        findFormItem(this.formConfig, 'name').defaultValue = permission.name;
-        findFormItem(this.formConfig, 'description').defaultValue = permission.description;
+        simpleSetForm(this.formConfig, permission);
+        // findFormItem(this.formConfig, 'name').defaultValue = permission.name;
+        // findFormItem(this.formConfig, 'description').defaultValue = permission.description;
         this.checkedKeys = [...res.data.results[1].filter(item => item.ishalf === 0).map(item => item.id)];
         this.originMenuList = [...res.data.results[1]];
         this.menuList = [...res.data.results[1]];
@@ -97,9 +98,9 @@ export class PermissionInfoComponent implements OnInit {
   searchMenuList() {
     this.util.get(urls.menu, getSql(urls.menu.url, AJAXTYPE.GET)).subscribe((res: HttpRes) => {
       if (res.code === 200) {
-        this.menus = getNodesByList(res.data.results);
+        this.menus = getNodesByList(res.data.results[0]);
         // 将根节点展开
-        this.expandKeys = res.data.results.filter(item => !item.pid).map(item => item.id);
+        this.expandKeys = res.data.results[0].filter(item => !item.pid).map(item => item.id);
       }
     });
   }
