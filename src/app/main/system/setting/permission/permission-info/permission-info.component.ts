@@ -1,15 +1,15 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {guid} from '../../../../core/utils/util-fns';
+import {guid} from '../../../../../core/utils/util-fns';
 import {FormGroup} from '@angular/forms';
-import {findFormItem, FormConfigItem, FORMEVENT, simpleSetForm} from '../../../../shared/component/form/form.model';
-import {UtilService} from '../../../../core/utils/util.service';
-import {urls} from '../../../../core/urls.model';
-import {AJAXTYPE, HttpRes} from '../../../../core/common.model';
-import {getNodesByList} from '../../../../core/utils/util-component';
+import {FormConfigItem, FORMEVENT, simpleSetForm} from '../../../../../shared/component/form/form.model';
+import {UtilService} from '../../../../../core/utils/util.service';
+import {urls} from '../../../../../core/urls.model';
+import {AJAXTYPE, HttpRes} from '../../../../../core/common.model';
+import {getNodesByList} from '../../../../../core/utils/util-component';
 import {NzMessageService, NzTreeComponent} from 'ng-zorro-antd';
-import {getSql} from '../../../../core/utils/util-sql';
-import {CoreService} from '../../../../core/core.service';
+import {getSql} from '../../../../../core/utils/util-sql';
+import {CoreService} from '../../../../../core/core.service';
 
 @Component({
   selector: 'app-permission-info',

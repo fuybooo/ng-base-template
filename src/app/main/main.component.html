@@ -12,13 +12,15 @@
   <div class="main-body">
     <div class="main-side">
       <ul nz-menu class="main-menu-list" [nzMode]="'inline'" appScrollbar>
-        <ng-container *ngFor="let m of crtNav.children">
+        <ng-container *ngFor="let m of crtNav?.children">
           <li *ngIf="m.children && m.children.length"
               class="main-menu-li-1"
-              nz-submenu [title]="m.origin.name">
+              nz-submenu
+              [nzOpen]="m.expand"
+          >
             <span title>
-              <i class="main-menu-li-i" [ngClass]="m.origin.icon"></i>
-              <span>{{m.origin.name}}</span>
+              <i class="main-menu-li-i anticon" [ngClass]="'anticon-' + m.origin.icon"></i>
+              <span [title]="m.origin.name">{{m.origin.name}}</span>
             </span>
             <ul>
               <ng-container *ngFor="let c of m.children">
@@ -29,7 +31,7 @@
                     (click)="onClickMenuItem(c)"
                 >
                   <span>
-                    <span>{{c.origin.name}}</span>
+                    <span class="menu-text" [title]="c.origin.name">{{c.origin.name}}</span>
                   </span>
                 </li>
               </ng-container>
@@ -42,7 +44,8 @@
               (click)="onClickMenuItem(m)"
           >
             <span>
-              <span>{{m.origin.name}}</span>
+              <i class="main-menu-li-i anticon" [ngClass]="'anticon-' + m.origin.icon"></i>
+              <span [title]="m.origin.name">{{m.origin.name}}</span>
             </span>
           </li>
         </ng-container>

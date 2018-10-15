@@ -194,7 +194,7 @@ export function getSql(url: string, type, params?) {
     case urls.userMenu.url:
       switch (type) {
         case AJAXTYPE.GET:
-          sqls.push(`select m.* from t_menu m where m.id in (select pm.menuid from t_permission_menu pm where pm.permissionid = (select pu.permissionid from t_permission_user pu where pu.userid = '${params.userid}'))`);
+          sqls.push(`select m.* from t_menu m where (m.id in (select pm.menuid from t_permission_menu pm where pm.permissionid = (select pu.permissionid from t_permission_user pu where pu.userid = '${params.userid}'))) or m.issubordinate = 1`);
           break;
       }
       break;

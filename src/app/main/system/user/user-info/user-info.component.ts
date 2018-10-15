@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {FormConfigItem} from '../../../shared/component/form/form.model';
-import {urls} from '../../../core/urls.model';
+import {FormConfigItem} from '../../../../shared/component/form/form.model';
+import {urls} from '../../../../core/urls.model';
 
 @Component({
   selector: 'app-user-info',

@@ -1,15 +1,13 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {Title} from '@angular/platform-browser';
 import {filter, map} from 'rxjs/internal/operators';
-import {langInfoKey, menuList} from './common.model';
+import {langInfoKey} from './common.model';
 import {environment} from '../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {NzI18nService, zh_CN, en_US} from 'ng-zorro-antd';
 
 @Injectable()
 export class CoreService {
-  spin = false;
   // 路由改变事件
   routeChangeEvent = new EventEmitter();
   // 全局列表
@@ -21,7 +19,6 @@ export class CoreService {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private titleService: Title,
     private translateService: TranslateService,
     private nzI18nService: NzI18nService,
   ) { }
@@ -54,15 +51,8 @@ export class CoreService {
       }),
       filter(route => route.outlet === 'primary')
     ).subscribe((route) => {
-      // route.snapshot.data['title'] ||
-      // this.titleService.setTitle(route.snapshot.data['title']);
       // 找到对应的路由
-      const component = menuList.find(menu => menu.route === this.router.routerState.snapshot.url);
-      if (component) {
-        this.titleService.setTitle(component.label + ' - 标题');
-      } else {
-        this.titleService.setTitle('网页标题');
-      }
+      // this.titleService.setTitle(route.snapshot.data['title'] || '标题');
       this.routeChangeEvent.emit();
     });
   }

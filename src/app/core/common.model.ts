@@ -24,8 +24,6 @@ export interface Menu {
   paramCount?: number;
   hideBreadcrumb?: boolean;
 }
-export const menuList: Menu[] = [
-];
 /**
  * 返回结果接口
  */

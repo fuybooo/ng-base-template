@@ -1,14 +1,15 @@
 import {Routes} from '@angular/router';
 import {MainComponent} from './main.component';
 import {AuthGuardService} from '../shared/guard/auth-guard.service';
-import {SettingComponent} from './setting/setting.component';
-import {PermissionComponent} from './setting/permission/permission.component';
-import {PermissionInfoComponent} from './setting/permission/permission-info/permission-info.component';
-import {PermissionUserComponent} from './setting/permission/permission-user/permission-user.component';
-import {PermissionUserInfoComponent} from './setting/permission/permission-user/permission-user-info/permission-user-info.component';
-import {UserComponent} from './user/user.component';
-import {UserInfoComponent} from './user/user-info/user-info.component';
+import {SettingComponent} from './system/setting/setting.component';
+import {PermissionComponent} from './system/setting/permission/permission.component';
+import {PermissionInfoComponent} from './system/setting/permission/permission-info/permission-info.component';
+import {PermissionUserComponent} from './system/setting/permission/permission-user/permission-user.component';
+import {PermissionUserInfoComponent} from './system/setting/permission/permission-user/permission-user-info/permission-user-info.component';
+import {UserComponent} from './system/user/user.component';
+import {UserInfoComponent} from './system/user/user-info/user-info.component';
 import {MenuResolver} from '../shared/guard/menu-resolver.service';
+import {MenuComponent} from './system/menu/menu.component';
 
 export const mainRoutes: Routes = [
   {
@@ -20,47 +21,55 @@ export const mainRoutes: Routes = [
     component: MainComponent,
     children: [
       {
+        path: 'example',
+        loadChildren: `./example/example.module#ExampleModule`
+      },
+      {
         path: '',
         component: SettingComponent,
         children: [
           {
             path: 'permission/list',
-            component: PermissionComponent
+            component: PermissionComponent,
           },
           {
             path: 'permission/info/:op',
-            component: PermissionInfoComponent
+            component: PermissionInfoComponent,
           },
           {
             path: 'permission/info/:op/:id',
-            component: PermissionInfoComponent
+            component: PermissionInfoComponent,
           },
           {
             path: 'permission-user/list',
-            component: PermissionUserComponent
+            component: PermissionUserComponent,
           },
           {
             path: 'permission-user/info/:op',
-            component: PermissionUserInfoComponent
+            component: PermissionUserInfoComponent,
           },
           {
             path: 'permission-user/info/:op/:id',
-            component: PermissionUserInfoComponent
-          },
+            component: PermissionUserInfoComponent,
+          }
         ]
       },
       {
         path: 'user/list',
-        component: UserComponent
+        component: UserComponent,
       },
       {
         path: 'user/info/:op',
-        component: UserInfoComponent
+        component: UserInfoComponent,
       },
       {
         path: 'user/info/:op/:id',
-        component: UserInfoComponent
+        component: UserInfoComponent,
       },
+      {
+        path: 'menu',
+        component: MenuComponent,
+      }
     ]
-  }
+  },
 ];

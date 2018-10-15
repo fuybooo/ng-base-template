@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {Column} from '../../../../shared/component/table/table.model';
-import {urls} from '../../../../core/urls.model';
+import {Column} from '../../../../../shared/component/table/table.model';
+import {urls} from '../../../../../core/urls.model';
 
 @Component({
   selector: 'app-permission-user',

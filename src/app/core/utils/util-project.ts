@@ -150,80 +150,6 @@ export function removeAll(list, valueKey = 'id', allValue = 'all') {
 export function upperCase(event, name, form) {
   form.controls[name].setValue(event.target.value.toUpperCase());
 }
-export function getMenu(menus, staticMenus) {
-  return staticMenus.map(item => {
-    if (item.children) {
-      return ({
-        ...item,
-        id: menus.find(m => m.code === item.code).id,
-        children: item.children.map(child => ({
-          ...child,
-          id: menus.find(m => {
-            return m.code === child.code;
-          }).id
-        }))
-      });
-    } else {
-      return ({
-        ...item,
-        id: menus.find(m => {
-          return m.code === item.code;
-        }).id
-      });
-    }
-  });
-}
-export function getRoleMenu(menuIdList, allMenu) {
-  return getParentList(allMenu, menuIdList).filter(item => !!item).map(item => {
-    if (item.children) {
-      // 不考虑出现只有父菜单而没有子菜单的情况
-      return {
-        ...item,
-        children: getParentList(item.children, menuIdList).filter(_item => !!_item)
-      };
-    } else {
-      return item;
-    }
-  });
-}
-export function getRolePermission(menuIdList, allPermission) {
-  return menuIdList.map(item => allPermission.find(p => p.id === item).code);
-}
-export function getSelectedMenuByIdList(menuIdList, allMenu) {
-  return allMenu.map(item => {
-    if (item.children) {
-      return ({
-        ...item,
-        disabled: !menuIdList.some(m => m === item.id), // 找到了，则为启用
-        children: item.children.map(child => ({
-          ...child,
-          disabled: !menuIdList.some(m => m === child.id)
-        }))
-      });
-    } else {
-      return ({
-        ...item,
-        disabled: !menuIdList.some(m => m === item.id)
-      });
-    }
-  });
-}
-export function getSelectedMenuId(allMenu) {
-  const menus = [];
-  allMenu.forEach(item => {
-    if (!item.disabled) {
-      menus.push(item.id);
-      if (item.children) {
-        item.children.forEach(child => {
-          if (!child.disabled) {
-            menus.push(child.id);
-          }
-        });
-      }
-    }
-  });
-  return menus;
-}
 
 /**
  * 任务详情是否显示操作按钮
@@ -260,4 +186,81 @@ export function saveLoginInfo(data) {
  */
 export function getLoginInfo() {
   return JSON.parse(localStorage.getItem(loginInfoKey));
+}
+
+
+/**
+ * 获取匹配的路由
+ */
+export function getMatchedNavMenu(crtUrl, menuTree, subordinateList): any {
+  /**
+   * 获取字符串中char出现的位置数组
+   */
+  function getCharIndexArray(str, char = '/') {
+    return str.split('').map((c, i) => ({i, c: c === char})).filter(item => item.c).map(item => item.i);
+  }
+  function getRootUrl(menu) {
+    let rootUrl = crtUrl;
+    if (menu.paramscount) {
+      const arr = getCharIndexArray(crtUrl);
+      // 当前路由的根路由
+      rootUrl = crtUrl.slice(0, arr[arr.length - menu.paramscount]);
+    }
+    return rootUrl;
+  }
+  function getCrt(menu) {
+    // 1. 与其本身匹配
+    let rootUrl = getRootUrl(menu);
+    if (rootUrl === menu.route) {
+      // 有匹配项
+      return menu;
+    } else if (menu.subordinateid) {
+      // 2. 与其从属匹配
+      // 找到从属列表
+      const menuSubordinateList = menu.subordinateid.split(',').map(id => subordinateList.find(item => item.id === id));
+      // 循环从属列表
+      for (let sI = 0, sL = menuSubordinateList.length; sI < sL; sI ++) {
+        const s = menuSubordinateList[sI];
+        // 根据从属列表中的项获取当前路由的rootUrl
+        rootUrl = getRootUrl(s);
+        // 如果当前路由的rootUrl与从属路由中的route相等，则返回当前路由的信息
+        if (rootUrl === s.route) {
+          // 有匹配项
+          return menu;
+        }
+      }
+    }
+    return;
+  }
+  let crtNav, crtMenu;
+  // 循环导航栏
+  F: for (let navI = 0, navL = menuTree.length; navI < navL; navI ++) {
+    const nav = menuTree[navI];
+    // 循环左侧一级菜单树
+    for (let nI = 0, nL = nav.children.length; nI < nL; nI ++) {
+      const n = nav.children[nI];
+      // 是否有子菜单
+      if (n.children && n.children.length) {
+        // 循环每一个子菜单
+        for (let menuI = 0, menuL = n.children.length; menuI < menuL; menuI ++) {
+          const menu = n.children[menuI];
+          const result = getCrt(menu.origin);
+          if (result) {
+            crtMenu = result;
+            crtNav = nav;
+            break F;
+          }
+        }
+      } else {
+        // 没有子菜单
+        const result = getCrt(n.origin);
+        if (result) {
+          crtMenu = result;
+          crtNav = nav;
+          break F;
+        }
+      }
+    }
+  }
+  return {crtNav, crtMenu};
 }

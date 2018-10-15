@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import {FormConfigItem} from '../../../../../shared/component/form/form.model';
-import {urls} from '../../../../../core/urls.model';
+import {FormConfigItem} from '../../../../../../shared/component/form/form.model';
+import {urls} from '../../../../../../core/urls.model';
 import {ActivatedRoute} from '@angular/router';
-import {UtilService} from '../../../../../core/utils/util.service';
-import {getSql} from '../../../../../core/utils/util-sql';
-import {AJAXTYPE, HttpRes} from '../../../../../core/common.model';
+import {UtilService} from '../../../../../../core/utils/util.service';
+import {getSql} from '../../../../../../core/utils/util-sql';
+import {AJAXTYPE, HttpRes} from '../../../../../../core/common.model';
 
 @Component({
   selector: 'app-permission-user-info',
