@@ -6,6 +6,7 @@ import {exampleRoutes} from './example.router';
 import {ExampleComponent} from './example.component';
 import {SharedModule} from '../../shared/shared.module';
 import {HttpInterceptorService} from '../../core/http-interceptor.service';
+import { ArticleComponent } from './article/article.component';
 
 @NgModule({
   imports: [
@@ -16,6 +17,6 @@ import {HttpInterceptorService} from '../../core/http-interceptor.service';
     {provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true},
   ],
   entryComponents: [],
-  declarations: [ExampleComponent, TimeComponent]
+  declarations: [ExampleComponent, TimeComponent, ArticleComponent]
 })
 export class ExampleModule { }

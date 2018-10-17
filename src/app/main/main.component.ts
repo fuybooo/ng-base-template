@@ -15,6 +15,7 @@ export class MainComponent implements OnInit {
   crtNav: any;
   crtMenu;
   crtUrl;
+  crtPathList;
   subordinateList = [];
   constructor(
     private router: Router,
@@ -36,7 +37,8 @@ export class MainComponent implements OnInit {
   }
   initNav() {
     this.crtUrl = this.router.routerState.snapshot.url;
-    const {crtNav, crtMenu} = getMatchedNavMenu(this.crtUrl, this.menuTree, this.subordinateList);
+    const {crtNav, crtMenu, crtPathList} = getMatchedNavMenu(this.crtUrl, this.menuTree, this.subordinateList);
+    this.crtPathList = crtPathList;
     this.crtNav = crtNav;
     this.menuTree.forEach(nav => nav.isActive = nav === this.crtNav);
     this.crtMenu = crtMenu;
@@ -78,9 +80,16 @@ export class MainComponent implements OnInit {
   changeNav(nav) {
     this.crtNav = nav;
     this.menuTree.forEach(n => n.isActive = n === this.crtNav);
-    this.router.navigateByUrl(`${nav.origin.route}${nav.origin.params || ''}`);
+    this.router.navigateByUrl(nav.origin.route);
   }
 
+  /**
+   * 点击面包屑跳转
+   * @param p
+   */
+  onClickBread(p) {
+    this.router.navigateByUrl(p.origin.route);
+  }
   /**
    * 切换菜单
    * @param menu

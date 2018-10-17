@@ -19,7 +19,7 @@
               [nzOpen]="m.expand"
           >
             <span title>
-              <i class="main-menu-li-i anticon" [ngClass]="'anticon-' + m.origin.icon"></i>
+              <i class="main-menu-li-i anticon" [ngClass]="'anticon-' + m.origin.iconcls"></i>
               <span [title]="m.origin.name">{{m.origin.name}}</span>
             </span>
             <ul>
@@ -44,7 +44,7 @@
               (click)="onClickMenuItem(m)"
           >
             <span>
-              <i class="main-menu-li-i anticon" [ngClass]="'anticon-' + m.origin.icon"></i>
+              <i class="main-menu-li-i anticon" [ngClass]="'anticon-' + m.origin.iconcls"></i>
               <span [title]="m.origin.name">{{m.origin.name}}</span>
             </span>
           </li>
@@ -52,7 +52,13 @@
       </ul>
     </div>
     <div class="main-content">
-      <app-setting></app-setting>
+      <nz-breadcrumb class="mb10i">
+        <nz-breadcrumb-item *ngFor="let p of crtPathList;last as l;">
+          <span *ngIf="l">{{p.title || p.name}}</span>
+          <a *ngIf="!l" (click)="onClickBread(p)">{{p.title || p.name}}</a>
+        </nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <router-outlet></router-outlet>
     </div>
   </div>
 </div>

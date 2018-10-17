@@ -15,6 +15,7 @@ import {CommonComponent as CommonSelectComponent} from './component/project/sele
 import {UnlessDirective} from './directive/unless.directive';
 import {CommonPageComponent} from './component/project/common-page/common-page.component';
 import {CommonInfoPageComponent} from './component/project/common-info-page/common-info-page.component';
+import { MenuTreeComponent } from './component/project/menu-tree/menu-tree.component';
 
 @NgModule({
   imports: [
@@ -38,7 +39,8 @@ import {CommonInfoPageComponent} from './component/project/common-info-page/comm
     FormComponent,
     CommonSelectComponent,
     CommonPageComponent,
-    CommonInfoPageComponent
+    CommonInfoPageComponent,
+    MenuTreeComponent
   ],
   entryComponents: [
     FormComponent,
@@ -63,7 +65,8 @@ import {CommonInfoPageComponent} from './component/project/common-info-page/comm
     ImportFileComponent,
     CommonSelectComponent,
     CommonPageComponent,
-    CommonInfoPageComponent
+    CommonInfoPageComponent,
+    MenuTreeComponent
   ],
 })
 export class SharedModule {

@@ -213,7 +213,7 @@ export function getMatchedNavMenu(crtUrl, menuTree, subordinateList): any {
     let rootUrl = getRootUrl(menu);
     if (rootUrl === menu.route) {
       // 有匹配项
-      return menu;
+      return {menu};
     } else if (menu.subordinateid) {
       // 2. 与其从属匹配
       // 找到从属列表
@@ -226,13 +226,13 @@ export function getMatchedNavMenu(crtUrl, menuTree, subordinateList): any {
         // 如果当前路由的rootUrl与从属路由中的route相等，则返回当前路由的信息
         if (rootUrl === s.route) {
           // 有匹配项
-          return menu;
+          return {menu, s};
         }
       }
     }
     return;
   }
-  let crtNav, crtMenu;
+  let crtNav, crtMenu, crtPathList;
   // 循环导航栏
   F: for (let navI = 0, navL = menuTree.length; navI < navL; navI ++) {
     const nav = menuTree[navI];
@@ -246,7 +246,11 @@ export function getMatchedNavMenu(crtUrl, menuTree, subordinateList): any {
           const menu = n.children[menuI];
           const result = getCrt(menu.origin);
           if (result) {
-            crtMenu = result;
+            crtPathList = [nav, n, menu];
+            if (result.s) {
+              crtPathList.push(result.s);
+            }
+            crtMenu = result.menu;
             crtNav = nav;
             break F;
           }
@@ -255,12 +259,16 @@ export function getMatchedNavMenu(crtUrl, menuTree, subordinateList): any {
         // 没有子菜单
         const result = getCrt(n.origin);
         if (result) {
-          crtMenu = result;
+          crtPathList = [nav, n];
+          if (result.s) {
+            crtPathList.push(result.s);
+          }
+          crtMenu = result.menu;
           crtNav = nav;
           break F;
         }
       }
     }
   }
-  return {crtNav, crtMenu};
+  return {crtNav, crtMenu, crtPathList};
 }

@@ -17,18 +17,11 @@
           <label>菜单</label>
         </div>
         <div nz-col [nzSpan]="14">
-          <div class="tree-box" appScrollbar>
-            <nz-tree
-              #nzTree
-              [(ngModel)]="menus"
-              [nzCheckable]="true"
-              [nzMultiple]="true"
-              [nzDefaultExpandedKeys]="expandKeys"
-              [nzDefaultCheckedKeys]="checkedKeys"
-              (nzCheckBoxChange)="checkBoxChange()"
-            >
-            </nz-tree>
-          </div>
+          <app-menu-tree
+            [checkable]="true"
+            [checkedKeys]="checkedKeys"
+            (changeCheckBox)="changeCheckBox($event)"
+          ></app-menu-tree>
         </div>
       </div>
     </div>

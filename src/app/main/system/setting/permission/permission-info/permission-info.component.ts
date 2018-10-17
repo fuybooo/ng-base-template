@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {guid} from '../../../../../core/utils/util-fns';
 import {FormGroup} from '@angular/forms';
@@ -6,8 +6,7 @@ import {FormConfigItem, FORMEVENT, simpleSetForm} from '../../../../../shared/co
 import {UtilService} from '../../../../../core/utils/util.service';
 import {urls} from '../../../../../core/urls.model';
 import {AJAXTYPE, HttpRes} from '../../../../../core/common.model';
-import {getNodesByList} from '../../../../../core/utils/util-component';
-import {NzMessageService, NzTreeComponent} from 'ng-zorro-antd';
+import {NzMessageService} from 'ng-zorro-antd';
 import {getSql} from '../../../../../core/utils/util-sql';
 import {CoreService} from '../../../../../core/core.service';
 
@@ -17,7 +16,6 @@ import {CoreService} from '../../../../../core/core.service';
   styleUrls: ['./permission-info.component.less']
 })
 export class PermissionInfoComponent implements OnInit {
-  @ViewChild('nzTree') nzTree: NzTreeComponent;
   formId = guid();
   form = new FormGroup({});
   formConfig: FormConfigItem[][] = [
@@ -48,8 +46,6 @@ export class PermissionInfoComponent implements OnInit {
   op;
   id;
   titleText;
-  menus;
-  expandKeys = [];
   checkedKeys = [];
   originMenuList = [];
   url = urls.permission;
@@ -65,7 +61,6 @@ export class PermissionInfoComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.searchMenuList();
     this.op = this.route.snapshot.params.op;
     this.id = this.route.snapshot.params.id;
     if (this.op === 'add') {
@@ -86,8 +81,6 @@ export class PermissionInfoComponent implements OnInit {
       if (res.code === 200) {
         const permission = res.data.results[0][0];
         simpleSetForm(this.formConfig, permission);
-        // findFormItem(this.formConfig, 'name').defaultValue = permission.name;
-        // findFormItem(this.formConfig, 'description').defaultValue = permission.description;
         this.checkedKeys = [...res.data.results[1].filter(item => item.ishalf === 0).map(item => item.id)];
         this.originMenuList = [...res.data.results[1]];
         this.menuList = [...res.data.results[1]];
@@ -95,34 +88,12 @@ export class PermissionInfoComponent implements OnInit {
       }
     });
   }
-  searchMenuList() {
-    this.util.get(urls.menu, getSql(urls.menu.url, AJAXTYPE.GET)).subscribe((res: HttpRes) => {
-      if (res.code === 200) {
-        this.menus = getNodesByList(res.data.results[0]);
-        // 将根节点展开
-        this.expandKeys = res.data.results[0].filter(item => !item.pid).map(item => item.id);
-      }
-    });
-  }
-  getMenuList() {
-    let menuList = [];
-    const reGetMenuList = function (tree) {
-      tree.forEach(item => {
-        menuList = [...menuList, item];
-        if (item.children && item.children.length) {
-          reGetMenuList(item.children);
-        }
-      });
-    };
-    reGetMenuList(this.nzTree.getCheckedNodeList());
-    this.menuList = [...menuList.map(item => ({id: item.key, isHalf: false})), ...this.nzTree.getHalfCheckedNodeList().map(item => ({id: item.key, isHalf: true}))];
-  }
 
   /**
    * 仅仅检查用户是否点击了checkbox
    */
-  checkBoxChange() {
-    this.getMenuList();
+  changeCheckBox(menuList) {
+    this.menuList = menuList;
     this.checkBoxChanged = true;
   }
 

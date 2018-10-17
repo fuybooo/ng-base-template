@@ -1,3 +1,17 @@
-<p>
-  menu works!
-</p>
+<div nz-row>
+  <div nz-col [nzSpan]="8">
+    <div class="menu-box">
+      菜单树
+      <app-menu-tree
+        [checkable]="false"
+        [isCustom]="true"
+        [treeBoxCls]="'menu-tree-box'"
+      ></app-menu-tree>
+    </div>
+  </div>
+  <div nz-col [nzSpan]="16">
+    <div class="menu-detail-box">
+      菜单详情
+    </div>
+  </div>
+</div>
