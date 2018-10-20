@@ -124,7 +124,7 @@ export function getColumnList(columnList, keys) {
  * allList 全部的父数组
  * subList 子数组 基本类型数组
  * subKey 子数组的key
- * subSubKey 字数组的另一种key
+ * subSubKey 子数组的另一种key
  * 例如 allList = [{id: 1, name: 'n1'}, {id: 2, name: 'n2'}, {id: 3, name: 'n3'}, {id: 4, name: 'n4'}]
  * subList = [1, 2];
  * subKey = 'id'

@@ -17,6 +17,7 @@ export class FormComponent implements OnInit, OnDestroy {
   @Input() formConfig: FormConfigItem[][]; // 主要配置项，必传
   @Input() form: FormGroup; // form表单主体，必传
   @Input() formType = ''; // form表单类型，默认为空，表示增改，可选为view，表示查看
+  @Input() formSize = ''; // 表单大小，可选值： small
   @Input() formAuxConfig: any = {};
   @Input() isGlobalEvent; // 是否需要全局事件去发射form表单的变化 默认为false // todo 长时间无用的话将会删掉
   @Output() formChange = new EventEmitter(); // 表单变化事件
@@ -29,7 +30,7 @@ export class FormComponent implements OnInit, OnDestroy {
   subscript;
   constructor(
     private fb: FormBuilder,
-    private coreService: CoreService
+    private core: CoreService
   ) { }
 
   ngOnInit() {
@@ -37,7 +38,7 @@ export class FormComponent implements OnInit, OnDestroy {
      * 只有在点击保存时才发射form表单
      */
     if (this.isGlobalEvent) {
-      this.subscript = this.coreService.globalFormEvent.subscribe((event) => {
+      this.subscript = this.core.globalFormEvent.subscribe((event) => {
         if (event && event.formId === this.formId && event.type === FORMEVENT.RESET) {
           this.initForm();
         }
@@ -56,7 +57,7 @@ export class FormComponent implements OnInit, OnDestroy {
     this.formConfig.forEach((row: any[]) => row.forEach((col: any) => {
       if (col) {
         group[col.field] = [
-          {value: col.defaultValue || null, disabled: col.disabled || this.formType === 'disable'},
+          {value: col.defaultValue === 0 ? 0 : (col.defaultValue || null), disabled: col.disabled || this.formType === 'disable'},
           [...(col.validators && col.validators.length ? col.validators.map(validator => {
             switch (validator.type) {
               case 'required':
@@ -72,6 +73,7 @@ export class FormComponent implements OnInit, OnDestroy {
         ];
       }
     }));
+    console.log(group);
     this.form = this.fb.group(group);
     this.initFormAuxConfig();
     this.changeControl();
@@ -114,9 +116,20 @@ export class FormComponent implements OnInit, OnDestroy {
     this.changeControl();
   }
   getViewValue(col) {
-    const defaultValueField = 'code';
-    const defaultLabelField = 'name';
-    return getPropValue(col.list, this.$(col.field), col.nzValueField || defaultValueField, col.nzLabelField || defaultLabelField);
+    if (col.isEmpty) {
+      return '无';
+    }
+    switch (col.type) {
+      case 'checkbox':
+      case 'radio':
+        return this.$(col.field) ? col.viewTrueValue || '是' : col.viewFalseValue || '否';
+      case 'select':
+        const defaultValueField = 'code';
+        const defaultLabelField = 'name';
+        return getPropValue(col.list, this.$(col.field), col.nzValueField || defaultValueField, col.nzLabelField || defaultLabelField);
+      default:
+        return this.$(col.field);
+    }
   }
   getNzLabel(option, col) {
     if (typeof col.nzLabelField === 'string') {

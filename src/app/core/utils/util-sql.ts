@@ -17,7 +17,7 @@ function pushUpdateStr(sqls, params, tableName, excludeFields = []) {
   let updateColStr = '';
   for (const p in params) {
     if (!excludeFields.some(f => f === p)) {
-      updateColStr += ` ${p} = '${params[p]}',`;
+      updateColStr += ` ${p} = ${sv(params[p])},`;
     }
   }
   // 如果不修改权限的名称或者描述的话，不需要执行修改语句
@@ -52,6 +52,17 @@ function pushCount(sqls, params, tableName) {
     sqls.push(`select count(*) as t from ${tableName}`);
   }
 }
+function sv(value) {
+  let sqlValue: any;
+  if (typeof value === 'string') {
+    sqlValue = `'${value}'`;
+  } else if (typeof value === 'number') {
+    sqlValue = value;
+  } else {
+    sqlValue = 'NULL';
+  }
+  return sqlValue;
+}
 /**
  * 生成sql语句
  * 本项目主要是做前端的展示，后端数据只通过简单的sql进行操作，暂时不考虑易用性，安全性等。
@@ -67,7 +78,41 @@ export function getSql(url: string, type, params?) {
       sqls.push(`select id, loginname, name from t_user where loginname = '${params.loginname}' and pwd = '${Base64.encode(`${params.loginname}${params.password}`)}'`);
       break;
     case urls.menu.url:
-      sqls.push(`select * from t_menu`);
+      switch (type) {
+        case AJAXTYPE.GET:
+          sqls.push(`select * from t_menu`);
+          break;
+        case AJAXTYPE.POST:
+          const menuId = guid();
+          sqls.push(`insert into t_menu (id,          pid,           code,                name,             route,             iconcls,             paramscount,          issubordinate,           description) values (
+                                        '${menuId}', '${params.pid}', '${params.code}', '${params.name}', ${sv(params.route)}, ${sv(params.iconcls)}, ${params.paramscount}, ${params.issubordinate}, ${sv(params.description)}
+            )`);
+          // 如果是从属，则其父的从属id中包含时不予改变
+          if (params.issubordinate) {
+            sqls.push(`update t_menu set subordinateid = '${params.psubordinateid ? [...(params.psubordinateid).split(','), menuId].join() : menuId}' where id = '${params.pid}'`);
+          }
+          break;
+        case AJAXTYPE.PUT:
+          pushUpdateStr(sqls, params, 't_menu', ['psubordinateid', 'id', 'pid']);
+          if (params.issubordinate) {
+            if (params.psubordinateid) {
+              // 其父有从属，判断当前是否被包含
+              if (!params.psubordinateid.includes(params.id)) {
+                sqls.push(`update t_menu set subordinateid = '${[...(params.psubordinateid).split(','), params.id].join()}' where id = '${params.pid}'`);
+              }
+            } else {
+              sqls.push(`update t_menu set subordinateid = '${params.id}' where id = '${params.pid}'`);
+            }
+          }
+          break;
+        case AJAXTYPE.DELETE:
+          // 如果它是从属，则改变其父的从属id字段
+          if (params.issubordinate) {
+            sqls.push(`update t_menu set subordinateid = '${params.psubordinateid.split(',').filter(item => item !== params.id).join()}' where id = '${params.pid}'`);
+          }
+          sqls.push(`delete from t_menu where id = '${params.id}'`);
+          break;
+      }
       break;
     case urls.permission.url:
       switch (type) {

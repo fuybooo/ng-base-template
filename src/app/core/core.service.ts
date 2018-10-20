@@ -16,6 +16,8 @@ export class CoreService {
   globalFormEvent = new EventEmitter();
   // 全局页面高度变化时触发
   pageHeightEvent = new EventEmitter();
+  // 菜单树
+  menuTreeEvent = new EventEmitter();
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,

@@ -1,17 +1,36 @@
-<div nz-row>
+<div nz-row nzGutter="10">
   <div nz-col [nzSpan]="8">
-    <div class="menu-box">
-      菜单树
+    <nz-card class="w" nzTitle="菜单树">
       <app-menu-tree
         [checkable]="false"
         [isCustom]="true"
         [treeBoxCls]="'menu-tree-box'"
+        (changeDropdown)="changeDropdown($event)"
+        (afterSearch)="afterSearch($event)"
       ></app-menu-tree>
-    </div>
+    </nz-card>
   </div>
   <div nz-col [nzSpan]="16">
-    <div class="menu-detail-box">
-      菜单详情
-    </div>
+    <nz-card class="w" [nzTitle]="detailTitle">
+      <div class="menu-detail-box">
+        <div class="text-disable" *ngIf="!opType">请选择左侧菜单进行操作。</div>
+        <div *ngIf="opType">
+          <app-form
+            [formSize]="'small'"
+            [isGlobalEvent]="true"
+            [formId]="formId"
+            [(form)]="form"
+            [formConfig]="formConfig"
+            [formType]="formType"
+          ></app-form>
+          <div nz-row>
+            <div nz-col [nzOffset]="7" [nzSpan]="14" class="pl15i mt10" *ngIf="activedNode?.origin.pid">
+              <button nz-button [nzType]="'primary'" (click)="handleForm()" [disabled]="opType === 'view' ? false : form.invalid || form.pristine">{{btnText}}</button>
+              <button nz-button class="ml20i" (click)="handleForm(true)">取消</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nz-card>
   </div>
 </div>

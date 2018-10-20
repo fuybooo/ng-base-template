@@ -3,20 +3,24 @@
     #nzTree
     [(ngModel)]="menus"
     [nzCheckable]="checkable"
-    [nzDefaultExpandedKeys]="expandKeys"
-    [nzDefaultCheckedKeys]="checkedKeys"
+    [(nzExpandedKeys)]="expandKeys"
+    [nzCheckedKeys]="checkedKeys"
     (nzCheckBoxChange)="checkBoxChange()"
     (nzClick)="clickNode($event)"
   >
     <ng-container *ngIf="isCustom">
+      <ng-template #nzTreeTemplate let-node>
+        <span class="tree-item-content" [class.active]="node?.origin?.id === activedNode?.origin?.id" (contextmenu)="contextMenu($event, contextTemplate, node)">
+          {{node.title}}
+          <ng-container *ngIf="node?.origin?.issubordinate === 1"><span class="tag">从属</span></ng-container>
+        </span>
+      </ng-template>
       <ng-template #contextTemplate>
         <ul nz-menu nzInDropDown>
-          <li nz-menu-item (click)="selectDropdown('delete')">删除</li>
-          <li nz-menu-item (click)="selectDropdown('addSub')">新建子文件夹</li>
+          <li *ngIf="activedNode.origin.pid" nz-menu-item (click)="selectDropdown('edit')">编辑</li>
+          <li *ngIf="activedNode.isLeaf" nz-menu-item (click)="selectDropdown('delete')">删除</li>
+          <li *ngIf="!activedNode.origin.pid || (activedNode.origin.code && activedNode.origin.code.length <= 9)" nz-menu-item (click)="selectDropdown('addSub')">新建子文件夹</li>
         </ul>
-      </ng-template>
-      <ng-template #nzTreeTemplate let-node>
-        <span (contextmenu)="contextMenu($event, contextTemplate)">{{node.title}}</span>
       </ng-template>
     </ng-container>
   </nz-tree>

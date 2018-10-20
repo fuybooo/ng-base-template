@@ -95,19 +95,20 @@ export function getChildren(item, array) {
   return children;
 }
 /**
- * 根据id获取当前数组中的值
+ * 根据 value 和 key 获取当前树中的节点
  * @param {NzTreeNode[]} nodes
- * @param id
+ * @param value
+ * @param key
  * @returns {NzTreeNode | undefined}
  */
-export function getNodeById(nodes: NzTreeNode[], id) {
+export function getNodeByValue(nodes: NzTreeNode[], value, key = 'id') {
   for (let i = 0, l = nodes.length; i < l; i ++) {
     const node = nodes[i];
-    if (node.origin.id === id) {
+    if (node.origin[key] === value) {
       return node;
     } else {
       if (node.children && node.children.length) {
-        getNodeById(node.children, id);
+        return getNodeByValue(node.children, value, key);
       }
     }
   }

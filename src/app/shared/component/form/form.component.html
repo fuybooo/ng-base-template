@@ -1,4 +1,4 @@
-<form nz-form [formGroup]="form">
+<form nz-form [formGroup]="form" [class]="formSize">
   <div *ngFor="let row of formConfig" nz-row [nzGutter]="nzGutter">
     <!--默认formConfig第第一项第长度为该form表单的横向宽度-->
     <ng-container *ngFor="let col of row">
@@ -76,17 +76,28 @@
                     </ng-container>
                     <!--普通多选框-->
                     <ng-container *ngSwitchCase="'checkbox'">
-
+                      <label nz-checkbox [formControlName]="col.field" (ngModelChange)="changeControl()"></label>
                     </ng-container>
-                    <!--普通多选框-->
+                    <!--普通多个多选框-->
                     <ng-container *ngSwitchCase="'checkboxes'">
                       <nz-checkbox-group [formControlName]="col.field" (ngModelChange)="changeControl()"></nz-checkbox-group>
+                    </ng-container>
+                    <!--树状选择器-->
+                    <ng-container *ngSwitchCase="'treeSelect'">
+                      <nz-tree-select
+                        [nzDefaultExpandedKeys]="col.expandedKeys"
+                        [nzNodes]="col.nodes"
+                        nzShowSearch
+                        [nzPlaceHolder]="'请选择'"
+                        [formControlName]="col.field"
+                        (ngModelChange)="changeControl()"
+                      ></nz-tree-select>
                     </ng-container>
                   </ng-container>
                 </ng-container>
               </ng-container>
               <ng-container *ngIf="formType === 'view' || col.colType === 'view'">
-                <span>{{col.view ? getViewValue(col) : $(col.field)}}</span>
+                <span [class.text-disable]="col.isEmpty">{{getViewValue(col)}}</span>
               </ng-container>
               <ng-container *ngIf="col.validators">
                 <ng-container *ngFor="let v of col.validators">

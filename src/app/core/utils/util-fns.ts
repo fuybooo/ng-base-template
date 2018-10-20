@@ -193,6 +193,40 @@ export function deepTrim(obj) {
   return newObj;
 }
 
+
+/**
+ * 深度clone
+ * @param obj
+ * @returns {any}
+ */
+export function deepClone(obj) {
+  debugger
+  if (obj === null) {
+    return obj;
+  }
+  let newObj;
+  if (typeof obj !== 'object') {
+    return obj;
+  } else {
+    const objType = Object.prototype.toString.call(obj);
+    newObj = objType === '[object Array]' ? [] : {};
+    if (objType === '[object Array]') {
+      for (let i = 0; i < obj.length; i ++) {
+        const objValue = obj[i];
+        newObj[i] = typeof objValue === 'object' ? deepClone(objValue) : objValue;
+      }
+    } else {
+      for (const i in obj) {
+        if (obj.hasOwnProperty(i)) {
+          const objValue = obj[i];
+          newObj[i] = typeof objValue === 'object' ? deepClone(objValue) : objValue;
+        }
+      }
+    }
+  }
+  return newObj;
+}
+
 export function isEqual(a: string | number, b: string | number) {
   return +a === +b;
 }
