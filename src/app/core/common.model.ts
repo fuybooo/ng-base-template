@@ -82,3 +82,5 @@ export const REGEXP = {
   onlyCapital: /^[A-Z]{2}$/,
   pwd: /^[a-zA-Z0-9!@#$%^&*()]+$/,
 };
+export const HEADER_HEIGHT = 50;
+export const NAV_HEIGHT = 36;

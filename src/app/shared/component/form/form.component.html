@@ -26,6 +26,8 @@
                         [nzLabel]="col.optionLabel || 'fn-user'"
                         [url]="col.url || defSelectUrl"
                         [special]="col.special"
+                        [serverSearch]="!col.isNotServerSearch"
+                        [list]="col.list"
                         [selectedItem]="$(col.field)"
                         (selectedItemChange)="changeSelectedItem($event, col)"
                       ></app-select-common>
@@ -92,6 +94,11 @@
                         [formControlName]="col.field"
                         (ngModelChange)="changeControl()"
                       ></nz-tree-select>
+                    </ng-container>
+                    <!--富文本编辑器-->
+                    <ng-container *ngSwitchCase="'editor'">
+                      <div [id]="'editor-' + formId"></div>
+                      <textarea hidden [formControlName]="col.field"></textarea>
                     </ng-container>
                   </ng-container>
                 </ng-container>

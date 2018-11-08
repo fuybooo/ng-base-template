@@ -77,6 +77,13 @@ export function getSql(url: string, type, params?) {
     case urls.login.url:
       sqls.push(`select id, loginname, name from t_user where loginname = '${params.loginname}' and pwd = '${Base64.encode(`${params.loginname}${params.password}`)}'`);
       break;
+    case urls.article.url:
+      switch (type) {
+        case AJAXTYPE.GET:
+          sqls.push(`select * from t_article`);
+          break;
+      }
+      break;
     case urls.menu.url:
       switch (type) {
         case AJAXTYPE.GET:

@@ -2,7 +2,7 @@
   "name": "ng-base-template",
   "version": "0.0.0",
   "scripts": {
-    "start": "ng serve --open --port 2712",
+    "start": "ng serve --open --port 2712 --host 10.12.80.119",
     "bl": "ng build --prod",
     "l": "lite-server",
     "preb": "node package-version.js",
@@ -19,7 +19,10 @@
     "@angular/platform-browser": "^6.1.10",
     "@angular/platform-browser-dynamic": "^6.1.10",
     "@angular/router": "^6.1.10",
+    "@delon/cli": "^0.8.1",
+    "@delon/util": "^1.5.0",
     "core-js": "^2.5.7",
+    "html2canvas": "^1.0.0-alpha.12",
     "rxjs": "^6.3.3",
     "zone.js": "^0.8.26"
   },
@@ -38,6 +41,7 @@
     "@types/node": "~10.12.0",
     "classlist.js": "^1.1.20150312",
     "codelyzer": "~4.5.0",
+    "dexie": "^2.0.4",
     "echarts": "^4.2.0-rc.2",
     "jasmine-core": "~3.2.1",
     "jasmine-spec-reporter": "~4.2.1",

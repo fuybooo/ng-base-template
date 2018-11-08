@@ -4,7 +4,6 @@ import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest,
 import {Observable} from 'rxjs';
 import {tap} from 'rxjs/internal/operators';
 import {CoreService} from './core.service';
-import {environment} from '../../environments/environment';
 
 /**
  * 请求监听拦截器
@@ -35,15 +34,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     }
     return next.handle(req).pipe(tap((res: HttpResponse<any>) => {
       // 请求成功
-      // 登录权限为空
       if (res.body) {
-        // if (res.body.code === 100001 // token未找到用户
-        //   || res.body.code === 100006 // 没传token
-        //   || res.body.code === 100008 // 用户未登录
-        // ) {
-        //   console.error('未找到用户');
-        //   this.router.navigate(['/login']);
-        // }
         this.coreService.pageHeightEvent.emit();
       }
     }, (err: HttpErrorResponse) => {

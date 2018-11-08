@@ -52,7 +52,8 @@
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/jquery.cookie/jquery.cookie.js",
               "node_modules/jquery-mousewheel/jquery.mousewheel.js",
-              "node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"
+              "node_modules/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js",
+              "node_modules/wangeditor/release/wangEditor.min.js"
             ]
           },
           "configurations": {

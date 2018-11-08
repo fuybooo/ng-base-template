@@ -1,0 +1,25 @@
+<div
+  class="drag-content"
+  draggable="true"
+     (dragover)="drag($event, '', '', 'wrap', 'dragover')"
+     (dragenter)="drag($event, '', '', 'wrap', 'dragenter')"
+     (dragleave)="drag($event, '', '', 'wrap', 'dragleave')"
+>
+  <div *ngFor="let listItem of listArray"
+       class="drag-wrap"
+>
+    <div class="">
+      <ng-container *ngFor="let item of listItem.list">
+        <div draggable="true" *ngIf="item"
+             (drag)="drag($event, item, listItem, 'box', 'drag')"
+             (dragstart)="drag($event, item, listItem, 'box', 'dragstart')"
+             (dragend)="drag($event, item, listItem, 'box', 'dragend')"
+             [ngClass]="'drag-box ' + item.className"
+        >
+          {{item.content}}
+        </div>
+        <div *ngIf="!item" class="drag-box drag-box-none"></div>
+      </ng-container>
+    </div>
+  </div>
+</div>

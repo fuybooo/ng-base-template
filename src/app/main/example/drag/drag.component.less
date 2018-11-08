@@ -1,0 +1,36 @@
+@import '../../../../assets/less/vars';
+.drag-wrap {
+  width: 260px;
+  min-height: 50px;
+  max-height: 400px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  margin-right: 8px;
+  padding: 5px;
+  float: left;
+  background-color: @color-background;
+}
+.drag-box {
+  background-color: @gray-1;
+  user-select: none;
+  cursor: pointer !important;
+  min-height: 40px;
+  line-height: 1.5;
+  border-radius: 4px;
+  padding: 5px;
+  &:not(:first-child) {
+    margin-top: 5px;
+  }
+  &:hover {
+    background-color: @color-background;
+  }
+}
+.drag-box.drag-box-none {
+  background-color: @color-dividers;
+}
+.box-dragging {
+  color: red;
+}
+.drag-content {
+  min-height: 100vh;
+}

@@ -40,18 +40,6 @@ export class MenuTreeComponent implements OnInit {
     this.searchMenuList();
     this.core.menuTreeEvent.subscribe(event => {
       this.searchMenuList(event.type, event.code, event.node);
-      // if (event.type === 'REFRESH') {
-      //   if (event.resetExpandKeys) {
-      //     this.resetExpandKeys = true;
-      //   }
-      //   this.searchMenuList(true);
-      // } else if (event.type === 'ACTIVENODE') {
-      //   this.activeNode(event.node);
-      // } else if (event.type === 'RESETEXPANDKEYS') {
-      //   this.expandKeys = event.expandKeys;
-      // } else if (event.type === 'addSub') {
-      //   this.searchMenuList(event.type, event.code, event.node);
-      // }
     });
   }
   searchMenuList(eventType?, eventCode?, eventNode?) {
@@ -68,17 +56,21 @@ export class MenuTreeComponent implements OnInit {
           this.expandKeys = res.data.results[0].filter(item => !item.pid).map(item => item.id);
         } else {
           this.expandKeys = [...this.expandKeys];
-          console.log('编辑keys', this.expandKeys);
         }
-        // if (isAfterSearch) {
-        //   this.afterSearch.emit({nodes: this.menus});
-        // }
         if (eventType === 'addSub') {
           this.activeNode(getNodeByValue(this.menus, eventCode, 'code'));
           this.expandKeys = getAllParent(this.activedNode).map(item => item.key);
         } else if (eventType === 'edit') {
           this.activeNode(eventNode);
           this.expandKeys = [...getAllParent(this.activedNode), ...(eventNode.children && eventNode.children.length ? [eventNode] : [])].map(item => item.key);
+        }
+        // 发送事件，更新当前菜单
+        if (eventType) {
+          this.core.getUserMenu().subscribe((resp: HttpRes) => {
+            if (resp.code === 200) {
+              this.core.mainMenuEvent.emit(resp.data.results[0]);
+            }
+          });
         }
       }
     });
@@ -124,8 +116,7 @@ export class MenuTreeComponent implements OnInit {
           }).subscribe((res: HttpRes) => {
             if (res.code === 200) {
               this.message.success('删除成功');
-              this.expandKeys = [...this.expandKeys];
-              this.searchMenuList();
+              this.searchMenuList('delete');
               this.activeNode(this.activedNode.parentNode);
             }
           });

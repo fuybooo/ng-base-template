@@ -1,7 +1,7 @@
 import {UrlConfig} from '../../../core/urls.model';
 
 declare type controlValidatorType = 'required' | 'maxlength' | 'minlength' | 'mistake';
-declare type controlType = undefined | 'text' | 'select' | 'commonSelect' | 'checkbox' | 'checkboxes' | 'radio' | 'textarea' | 'switch' | 'number' | 'date' | 'date-range' | 'time' | 'file' | 'custom' | 'label' | 'treeSelect';
+declare type controlType = undefined | 'text' | 'select' | 'commonSelect' | 'checkbox' | 'checkboxes' | 'radio' | 'textarea' | 'switch' | 'number' | 'date' | 'date-range' | 'time' | 'file' | 'custom' | 'label' | 'treeSelect' | 'editor';
 interface ControlValidator {
   type: controlValidatorType; // 验证类型
   value?: RegExp | number; // 验证类型附加值，最大最小值，验证正则等
@@ -40,6 +40,7 @@ export interface FormConfigItem {
   optionLabel?: string; // 下拉框显示的label字段
   url?: UrlConfig; // 查询下拉框时的url，默认为user
   special?: string; // 查询下拉框时的特殊参数
+  isNotServerSearch?: boolean; // 是否为本地搜索，默认为false
   // treeSelect
   nodes?: any[];
   expandedKeys?: any[];
@@ -51,11 +52,11 @@ export const FORMEVENT = {
   RESET: 'RESET'
 };
 export const nzLabelFormatter = (option, field1, field2) => option[field1] + '（' + option[field2] + '）';
-export function findFormItem(formConfig, field): FormConfigItem {
+export function findFormItem(formConfig, value, field = 'field'): FormConfigItem {
   for (const row of formConfig) {
     for (const col of row) {
       if (col) {
-        if (col.field === field) {
+        if (col[field] === value) {
           return col;
         }
       }

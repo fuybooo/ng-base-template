@@ -1,0 +1,49 @@
+@import "../../../../assets/less/vars";
+.list-item {
+  display: list-item;
+}
+.block-table {
+  width: 128px;
+  margin: 0 auto;
+}
+.col {
+  width: 50%;
+}
+.col-left, .col-right {
+  padding-bottom: 9999px;
+  margin-bottom: -9999px;
+}
+.col-left {
+  background-color: #52c41a;
+}
+.col-right {
+  background-color: #ffec3d;
+}
+.plus {
+  display: block;
+  width: 76px;
+  height: 76px;
+  border: 2px dashed;
+  color: #ccc;
+  overflow: hidden;
+  position: relative;
+  &:hover {
+    color: @primary-color;
+  }
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+  &:before {
+    width: 20px;
+    border-top: 4px solid;
+    margin: -2px 0 0 -10px;
+  }
+  &:after {
+    height: 20px;
+    border-left: 4px solid;
+    margin: -10px 0 0 -2px;
+  }
+}

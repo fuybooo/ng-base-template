@@ -1,10 +1,14 @@
 import {EventEmitter, Injectable} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter, map} from 'rxjs/internal/operators';
-import {langInfoKey} from './common.model';
+import {AJAXTYPE, langInfoKey} from './common.model';
 import {environment} from '../../environments/environment';
 import {TranslateService} from '@ngx-translate/core';
 import {NzI18nService, zh_CN, en_US} from 'ng-zorro-antd';
+import {getSql} from './utils/util-sql';
+import {getLoginInfo} from './utils/util-project';
+import {urls} from './urls.model';
+import {UtilService} from './utils/util.service';
 
 @Injectable()
 export class CoreService {
@@ -18,11 +22,14 @@ export class CoreService {
   pageHeightEvent = new EventEmitter();
   // 菜单树
   menuTreeEvent = new EventEmitter();
+  // 主页面菜单事件
+  mainMenuEvent = new EventEmitter();
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private translateService: TranslateService,
     private nzI18nService: NzI18nService,
+    private util: UtilService
   ) { }
   static getDefaultLang() {
     const localLang = localStorage.getItem(langInfoKey);
@@ -73,6 +80,14 @@ export class CoreService {
         break;
     }
     this.nzI18nService.setLocale(langFile);
+  }
+  getUserMenu() {
+    const id = getLoginInfo().id;
+    const params = {userid: id};
+    return this.util.get(urls.userMenu, {
+      ...params,
+      ...getSql(urls.userMenu.url, AJAXTYPE.GET, params)
+    });
   }
   logout() {
     this.router.navigate(['/login']);

@@ -13,24 +13,28 @@ import {UrlConfig, urls} from '../../../../../core/urls.model';
 export class CommonComponent implements OnInit {
   @Input() nzValue = 'id';
   @Input() nzLabel = 'fn-user';
-  @Input() extLabelField = ''; // 额外的数据
+  @Input() extLabelField = ''; // 额外的数据，有的选择框需要用到第三个字段
   @Input() valueKey = 'kw';
   @Input() url: UrlConfig = urls.user; // 默认查询用户数据
   @Input() special;
   @Input() selectedItem;
+  @Input() serverSearch = true;
+  @Input() placeholder = '可以输入关键字搜索哦...';
+  @Input() list = [];
   @Output() selectedItemChange = new EventEmitter();
   @Output() extLabelFieldChange = new EventEmitter();
-  list = [];
   searchChange$ = new BehaviorSubject('');
   constructor(
     private utilService: UtilService
   ) { }
 
   ngOnInit() {
-    // 订阅搜索事件
-    this.subSearch();
-    // 初次搜索
-    this.onSearch();
+    if (this.serverSearch) {
+      // 订阅搜索事件
+      this.subSearch();
+      // 初次搜索
+      this.onSearch();
+    }
   }
   subSearch() {
     const getList = (value: string) => {

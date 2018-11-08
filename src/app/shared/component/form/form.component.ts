@@ -1,11 +1,12 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CoreService} from '../../../core/core.service';
-import {FormConfigItem, FORMEVENT} from './form.model';
+import {findFormItem, FormConfigItem, FORMEVENT} from './form.model';
 import {getSpecialCharacterValidator} from '../../../core/utils/util-validate';
 import {getPropValue, isEmptyObject} from '../../../core/utils/util-fns';
 import {urls} from '../../../core/urls.model';
-
+declare let $: any;
+declare let wangEditor: any;
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -73,10 +74,23 @@ export class FormComponent implements OnInit, OnDestroy {
         ];
       }
     }));
-    console.log(group);
     this.form = this.fb.group(group);
+    this.initSpecialControl();
     this.initFormAuxConfig();
     this.changeControl();
+  }
+  initSpecialControl() {
+    setTimeout(() => {
+      const editor = new wangEditor(`#editor-${this.formId}`);
+      editor.customConfig.onchange = (c) => {
+        console.log('editor.change');
+        const editorField = findFormItem(this.formConfig, 'editor', 'type').field;
+        this.$control(editorField).setValue(c);
+        this.$control(editorField).markAsDirty();
+        this.changeControl();
+      };
+      editor.create();
+    }, 100);
   }
   initFormAuxConfig() {
     if (this.formConfig[0].length === 1) {

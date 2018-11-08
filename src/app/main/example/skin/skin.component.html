@@ -1,0 +1,20 @@
+<div>
+  <div *ngFor="let color of colors">
+    <div class="skin-title mt10">
+      <span class="skin-color-name">{{color.name}}</span>
+      <span class="skin-color-desc">{{color.desc}}</span>
+    </div>
+    <div nz-row class="mt10">
+      <div class="h40 tac" nz-col [nzSpan]="2" *ngFor="let c of color.arr">
+        <span class="skin-color-block" [style.background-color]="c" (click)="apply(c)"></span>
+      </div>
+    </div>
+  </div>
+  <div class="mt20">
+    <div nz-row>
+      <div nz-col [nzSpan]="20">
+        <button nz-button nzBlock [nzType]="'primary'" (click)="apply()">随机</button>
+      </div>
+    </div>
+  </div>
+</div>

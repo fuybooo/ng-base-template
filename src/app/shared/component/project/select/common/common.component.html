@@ -1,10 +1,10 @@
 <nz-select
   class="w"
   [(ngModel)]="selectedItem"
-  nzPlaceHolder="输入内容，进行搜索..."
+  [nzPlaceHolder]="placeholder"
   nzAllowClear
   nzShowSearch
-  [nzServerSearch]="true"
+  [nzServerSearch]="serverSearch"
   (nzOnSearch)="onSearch($event)"
   (ngModelChange)="onChange($event)"
 >

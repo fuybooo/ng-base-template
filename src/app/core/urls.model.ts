@@ -10,6 +10,7 @@ interface CommonUrl {
   permissionUser: UrlConfig;
   user: UrlConfig;
   userMenu: UrlConfig;
+  article: UrlConfig;
 }
 /**
  * 请求URL
@@ -38,6 +39,10 @@ export const urls: CommonUrl = {
   },
   userMenu: {
     url: '/userMenu',
+    isStatic: false
+  },
+  article: {
+    url: '/article',
     isStatic: false
   },
 };

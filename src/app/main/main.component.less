@@ -1,7 +1,4 @@
 @import "../../assets/less/vars";
-@header-height: 50px;
-@nav-height: 36px;
-@side-width: 200px;
 .main-page {
   .main-header {
     background-color: @color-border;
@@ -27,17 +24,17 @@
       position: relative;
       cursor: pointer;
       &:hover {
-        color: @primary-color;
+        //color: @primary-color;
       }
       .border-bottom {
         position: absolute;
       }
       &.active {
-        color: @primary-color;
+        //color: @primary-color;
         .border-bottom {
           height: 2px;
           width: 80%;
-          background-color: @primary-color;
+          //background-color: @primary-color;
           left: 50%;
           bottom: 0;
           transform: translateX(-50%);
@@ -50,7 +47,7 @@
     .main-side {
       width: @side-width;
       background-color: @color-background;
-      height: e('calc(100vh - @{header-height} - @{nav-height})');
+      //min-height: e('calc(@{min-height} - @{header-height} - @{nav-height})');
       .main-menu-list {
         .main-menu-li-1, .main-menu-li-2 {
           background-color: @color-background;
@@ -58,7 +55,7 @@
           margin-bottom: 0;
           color: @color-black;
           &.ant-menu-item-selected {
-            background-color: @primary-color;
+            //background-color: @primary-color;
             color: @gray-1;
             .menu-text {
               color: @gray-1;
@@ -81,13 +78,13 @@
   }
 }
 /* 当页面的高度小于 @min-height 时，左侧菜单高度会固定为一个值 */
-@media screen and (max-height: @min-height) {
-  .main-page .main-body .main-side {
-    height: e('calc(@{min-height} - @{header-height} - @{nav-height})');
-  }
-}
+//@media screen and (max-height: @min-height) {
+//  .main-page .main-body .main-side {
+//    min-height: e('calc(@{min-height} - @{header-height} - @{nav-height})');
+//  }
+//}
 @media screen and (max-width: @min-width) {
   .main-page .main-body .main-content {
-    width: e('calc(@{min-width} - @{side-width})');
+    min-width: e('calc(@{min-width} - @{side-width})');
   }
 }

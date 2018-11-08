@@ -8,20 +8,18 @@ import {getSql} from '../../core/utils/util-sql';
 import {AJAXTYPE, HttpRes} from '../../core/common.model';
 import {map} from 'rxjs/internal/operators';
 import {NzMessageService} from 'ng-zorro-antd';
+import {CoreService} from '../../core/core.service';
 
 @Injectable()
 export class MenuResolver implements Resolve<any> {
 
   constructor(private util: UtilService,
               private router: Router,
-              private message: NzMessageService) {}
+              private message: NzMessageService,
+              private core: CoreService
+              ) {}
   resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<any> {
-    const id = getLoginInfo().id;
-    const params = {userid: id};
-    return this.util.get(urls.userMenu, {
-      ...params,
-      ...getSql(urls.userMenu.url, AJAXTYPE.GET, params)
-    }).pipe(map((res: HttpRes) => {
+    return this.core.getUserMenu().pipe(map((res: HttpRes) => {
       if (res.code === 200) {
         const menus = res.data.results[0];
         if (menus.length) {

@@ -27,13 +27,17 @@ export class MainComponent implements OnInit {
   ngOnInit() {
     // 从resolve守卫中获取当前用户的菜单信息
     this.route.data.subscribe((res: any) => {
-      this.subordinateList = res.menu.filter(item => item.issubordinate === 1);
-      this.getMenuMap(res.menu.filter(item => item.issubordinate !== 1));
+      this.renderPage(res.menu);
     });
     this.core.routeChangeEvent.subscribe(() => {
       this.initNav();
       this.initMenu();
     });
+    this.core.mainMenuEvent.subscribe((res: any) => this.renderPage(res));
+  }
+  renderPage(menu) {
+    this.subordinateList = menu.filter(item => item.issubordinate === 1);
+    this.getMenuMap(menu.filter(item => item.issubordinate !== 1));
   }
   initNav() {
     this.crtUrl = this.router.routerState.snapshot.url;

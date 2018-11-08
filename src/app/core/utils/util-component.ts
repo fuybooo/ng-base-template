@@ -1,5 +1,5 @@
 import {NzTreeNode} from 'ng-zorro-antd';
-
+let resNode;
 /**
  * 获取默认的模态框底部按钮组
  * @param onClick ok按钮确认事件，必须传入
@@ -102,13 +102,19 @@ export function getChildren(item, array) {
  * @returns {NzTreeNode | undefined}
  */
 export function getNodeByValue(nodes: NzTreeNode[], value, key = 'id') {
+  resNode = null;
+  reGetNodeByValue(nodes, value, key);
+  return resNode;
+}
+function reGetNodeByValue(nodes: NzTreeNode[], value, key = 'id') {
   for (let i = 0, l = nodes.length; i < l; i ++) {
     const node = nodes[i];
     if (node.origin[key] === value) {
-      return node;
+      resNode = node;
+      break;
     } else {
       if (node.children && node.children.length) {
-        return getNodeByValue(node.children, value, key);
+        reGetNodeByValue(node.children, value, key);
       }
     }
   }

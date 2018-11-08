@@ -153,11 +153,11 @@ export function trimList(list) {
 /**
  * 将一维数组转换成2维数组
  * @param {any[]} list
- * @param {number} num
+ * @param {number} num 每个子数组的长度
  * @returns {any[]}
  */
-export function genArray(list: any[], num = 2) {
-  return new Array(Math.ceil(list.length / num)).fill(0).map((item, i) => num === 1 ? list[i] : new Array(num).fill(0).map((_item, j) => list[i * num + j]));
+export function sliceArray(list: any[], num = 2) {
+  return new Array(Math.ceil(list.length / num)).fill(0).map((item, i) => num === 1 ? list[i] : (new Array(num).fill(0).map((_item, j) => list[i * num + j])));
 }
 
 /**
@@ -187,40 +187,6 @@ export function deepTrim(obj) {
           continue;
         }
         newObj[i] = typeof objValue === 'object' ? deepTrim(objValue) : objValue;
-      }
-    }
-  }
-  return newObj;
-}
-
-
-/**
- * 深度clone
- * @param obj
- * @returns {any}
- */
-export function deepClone(obj) {
-  debugger
-  if (obj === null) {
-    return obj;
-  }
-  let newObj;
-  if (typeof obj !== 'object') {
-    return obj;
-  } else {
-    const objType = Object.prototype.toString.call(obj);
-    newObj = objType === '[object Array]' ? [] : {};
-    if (objType === '[object Array]') {
-      for (let i = 0; i < obj.length; i ++) {
-        const objValue = obj[i];
-        newObj[i] = typeof objValue === 'object' ? deepClone(objValue) : objValue;
-      }
-    } else {
-      for (const i in obj) {
-        if (obj.hasOwnProperty(i)) {
-          const objValue = obj[i];
-          newObj[i] = typeof objValue === 'object' ? deepClone(objValue) : objValue;
-        }
       }
     }
   }

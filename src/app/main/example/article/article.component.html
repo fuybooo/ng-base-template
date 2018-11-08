@@ -1,7 +1,16 @@
-<h2>收录的有用的文章</h2>
-<table border="1" class="w">
-  <tr>
-    <td><a href="https://www.cnblogs.com/whb17bcdq/p/6513766.html">窗口宽高，元素位置获取</a></td>
-    <td><a href="https://blog.csdn.net/qq_35723367/article/details/80044436">js导出excel处理单元格样式</a></td>
+<div nz-row>
+  <h2 nz-col [nzSpan]="18">超超超超链接</h2>
+  <div nz-col [nzSpan]="6" class="tar">
+    <button nz-button [nzType]="'primary'" (click)="add()">新增</button>
+  </div>
+</div>
+<table class="w article-table" border="1">
+  <tr *ngFor="let subList of list">
+    <td *ngFor="let s of subList">
+      <ng-container *ngIf="s">
+        <a *ngIf="s.url" [href]="s.url" target="_bank">{{s.title}}</a>
+        <a *ngIf="!s.url" (click)="viewInfo(s)">{{s.title}}</a>
+      </ng-container>
+    </td>
   </tr>
 </table>

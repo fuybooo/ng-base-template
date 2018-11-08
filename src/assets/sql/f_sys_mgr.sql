@@ -10,10 +10,27 @@ Target Server Type    : MYSQL
 Target Server Version : 50639
 File Encoding         : 65001
 
-Date: 2018-10-15 16:23:51
+Date: 2018-10-23 10:51:43
 */
 
 SET FOREIGN_KEY_CHECKS=0;
+
+-- ----------------------------
+-- Table structure for `t_article`
+-- ----------------------------
+DROP TABLE IF EXISTS `t_article`;
+CREATE TABLE `t_article` (
+  `id` varchar(50) NOT NULL DEFAULT '',
+  `title` varchar(100) DEFAULT NULL,
+  `type` int(2) DEFAULT NULL,
+  `url` varchar(1000) DEFAULT NULL,
+  `content` text,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Records of t_article
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for `t_menu`
@@ -25,8 +42,8 @@ CREATE TABLE `t_menu` (
   `code` varchar(50) DEFAULT NULL,
   `name` varchar(50) DEFAULT NULL,
   `route` varchar(100) DEFAULT NULL,
-  `subordinateid` varchar(50) DEFAULT NULL COMMENT '从属id，该数据属于id为subordinateid的数据的从属数据',
-  `icon` varchar(50) DEFAULT NULL,
+  `subordinateid` varchar(1000) DEFAULT NULL COMMENT '从属id，该数据属于id为subordinateid的数据的从属数据',
+  `iconcls` varchar(50) DEFAULT NULL,
   `paramscount` int(3) DEFAULT NULL COMMENT '参数个数 /0/1代表2个参数',
   `issubordinate` tinyint(1) DEFAULT NULL COMMENT '是否为从属菜单',
   `description` varchar(100) DEFAULT NULL,
@@ -47,18 +64,18 @@ INSERT INTO `t_menu` VALUES ('16', '5', '004001', '菜单一', null, null, 'team
 INSERT INTO `t_menu` VALUES ('17', '5', '004002', '菜单二', null, null, 'message', null, null, null);
 INSERT INTO `t_menu` VALUES ('18', '5', '004003', '菜单三', null, null, 'rocket', null, null, null);
 INSERT INTO `t_menu` VALUES ('19', '5', '004004', '菜单四', null, null, 'safety', null, null, null);
-INSERT INTO `t_menu` VALUES ('2', '1', '001', '管理系统', '/main/user/list', null, null, null, null, null);
+INSERT INTO `t_menu` VALUES ('2', '1', '001', '管理系统', '/main/user/list', null, null, null, '0', null);
 INSERT INTO `t_menu` VALUES ('20', '5', '004005', '菜单五', null, null, 'profile', null, null, null);
-INSERT INTO `t_menu` VALUES ('21', '6', '001001001', '用户列表', '/main/user/list', '50,51', null, null, null, null);
+INSERT INTO `t_menu` VALUES ('21', '6', '001001001', '用户列表', '/main/user/list', '50,51', null, null, '0', '');
 INSERT INTO `t_menu` VALUES ('22', '6', '001001002', '子菜单二', '/main/module1/t_menu1/sub2', null, null, null, null, null);
-INSERT INTO `t_menu` VALUES ('23', '8', '001003001', '权限管理', '/main/permission/list', null, null, null, null, null);
-INSERT INTO `t_menu` VALUES ('24', '8', '001003002', '权限设置', '/main/permission-user/list', null, null, null, null, null);
-INSERT INTO `t_menu` VALUES ('25', '9', '002001001', '子菜单一', '/main/example/time', null, null, null, null, null);
-INSERT INTO `t_menu` VALUES ('26', '9', '002001002', '子菜单二', '/main/module2/t_menu1/sub2', null, null, null, null, null);
+INSERT INTO `t_menu` VALUES ('23', '8', '001003001', '权限管理', '/main/permission/list', '52,53', null, null, null, null);
+INSERT INTO `t_menu` VALUES ('24', '8', '001003002', '权限设置', '/main/permission-user/list', '54,55', null, null, null, null);
+INSERT INTO `t_menu` VALUES ('25', '9', '002001001', '文章集锦', '/main/example/article', null, null, null, '0', null);
+INSERT INTO `t_menu` VALUES ('26', '9', '002001002', '时间爆炸', '/main/example/time', null, null, null, '0', null);
 INSERT INTO `t_menu` VALUES ('27', '10', '002002001', '子菜单一', '/main/module2/t_menu2/sub1', null, null, null, null, null);
 INSERT INTO `t_menu` VALUES ('28', '10', '002002002', '子菜单二', '/main/module2/t_menu2/sub2', null, null, null, null, null);
 INSERT INTO `t_menu` VALUES ('29', '11', '002003001', '子菜单一', '/main/module2/t_menu3/sub1', null, null, null, null, null);
-INSERT INTO `t_menu` VALUES ('3', '1', '002', '模块二', '/main/example/time', null, null, null, null, null);
+INSERT INTO `t_menu` VALUES ('3', '1', '002', '知识乐园', '/main/example/article', null, null, null, '0', null);
 INSERT INTO `t_menu` VALUES ('30', '11', '002003002', '子菜单二', '/main/module2/t_menu3/sub2', null, null, null, null, null);
 INSERT INTO `t_menu` VALUES ('31', '13', '003002001', '子菜单一', '/main/module3/t_menu2/sub1', null, null, null, null, null);
 INSERT INTO `t_menu` VALUES ('32', '13', '003002002', '子菜单二', '/main/module3/t_menu2/sub2', null, null, null, null, null);
@@ -81,12 +98,16 @@ INSERT INTO `t_menu` VALUES ('47', '19', '004004002', '子菜单二', '/main/mod
 INSERT INTO `t_menu` VALUES ('48', '20', '004005001', '子菜单一', '/main/module4/t_menu5/sub1', null, null, null, null, null);
 INSERT INTO `t_menu` VALUES ('49', '20', '004005002', '子菜单二', '/main/module4/t_menu5/sub2', null, null, null, null, null);
 INSERT INTO `t_menu` VALUES ('5', '1', '004', '模块四', '/main/module4', null, null, null, null, null);
-INSERT INTO `t_menu` VALUES ('50', null, '00100100101', '用户信息', '/main/user/info', null, null, '1', '1', '新增用户');
-INSERT INTO `t_menu` VALUES ('51', null, '00100100102', '用户信息', '/main/user/info', null, null, '2', '1', '编辑用户');
-INSERT INTO `t_menu` VALUES ('6', '2', '001001', '用户管理', null, null, 'team', null, null, null);
+INSERT INTO `t_menu` VALUES ('50', '21', '00100100101', '新增用户', '/main/user/info', null, null, '1', '1', '新增用户');
+INSERT INTO `t_menu` VALUES ('51', '21', '00100100102', '编辑用户', '/main/user/info', null, null, '2', '1', '编辑用户');
+INSERT INTO `t_menu` VALUES ('52', '23', '00100300101', '新增权限', '/main/permission/info', null, null, '1', '1', '新增权限');
+INSERT INTO `t_menu` VALUES ('53', '23', '00100300102', '编辑权限', '/main/permission/info', null, null, '2', '1', '编辑权限');
+INSERT INTO `t_menu` VALUES ('54', '24', '00100300201', '新增权限设置', '/main/permission-user/info', null, null, '1', '1', '新增权限设置');
+INSERT INTO `t_menu` VALUES ('55', '24', '00100300202', '编辑权限设置', '/main/permission-user/info', null, null, '2', '1', '编辑权限设置');
+INSERT INTO `t_menu` VALUES ('6', '2', '001001', '用户管理', '/main/user/list', null, 'team', null, null, null);
 INSERT INTO `t_menu` VALUES ('7', '2', '001002', '菜单管理', '/main/menu', null, 'bars', null, null, null);
 INSERT INTO `t_menu` VALUES ('8', '2', '001003', '系统设置', null, null, 'setting', null, null, null);
-INSERT INTO `t_menu` VALUES ('9', '3', '002001', '菜单一', null, null, 'area-chart', null, null, null);
+INSERT INTO `t_menu` VALUES ('9', '3', '002001', '初级园地', null, null, 'area-chart', null, '0', null);
 
 -- ----------------------------
 -- Table structure for `t_permission`
@@ -107,6 +128,7 @@ INSERT INTO `t_permission` VALUES ('210857c0-659c-4ec6-9ffe-6c661faa82ab', '全�
 INSERT INTO `t_permission` VALUES ('48f42a98-bb0a-41bf-b55e-93044acd60f8', '模块4', '模块四');
 INSERT INTO `t_permission` VALUES ('49488b3d-5a83-420e-97f6-5686dd38d021', '模块3', '模块三');
 INSERT INTO `t_permission` VALUES ('b9ef9e52-8978-4622-a97c-2b3296f0e9d2', '模块1', '模块一');
+INSERT INTO `t_permission` VALUES ('c88a015c-f14b-4cab-946b-ce64a1ecfb84', '管理系统', '仅管理系统');
 
 -- ----------------------------
 -- Table structure for `t_permission_menu`
@@ -143,6 +165,7 @@ INSERT INTO `t_permission_menu` VALUES ('1ee5e53f-b4a4-4c97-87ae-c932b7fc2af0', 
 INSERT INTO `t_permission_menu` VALUES ('1f03d590-af44-48d3-8982-bf3884880d89', '0986c734-37d7-400a-a4f1-484531069440', '25', '0');
 INSERT INTO `t_permission_menu` VALUES ('1f4c1cdd-4cd7-4b10-8511-8370893a784e', '48f42a98-bb0a-41bf-b55e-93044acd60f8', '1', '1');
 INSERT INTO `t_permission_menu` VALUES ('20172fb3-13a9-45a9-be33-0a5953729d55', '48f42a98-bb0a-41bf-b55e-93044acd60f8', '19', '0');
+INSERT INTO `t_permission_menu` VALUES ('20e726f4-f47b-451e-9ff8-55bfe01e0198', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '7', '0');
 INSERT INTO `t_permission_menu` VALUES ('2131f49d-d2fb-40cb-9d83-062fb0213b3f', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '11', '0');
 INSERT INTO `t_permission_menu` VALUES ('231628b4-9117-407a-9171-cbf0ad8ec388', '0986c734-37d7-400a-a4f1-484531069440', '1', '1');
 INSERT INTO `t_permission_menu` VALUES ('255e43a2-3ee0-4b71-941d-e57e6dd8dde2', '0986c734-37d7-400a-a4f1-484531069440', '27', '0');
@@ -155,6 +178,7 @@ INSERT INTO `t_permission_menu` VALUES ('2cc2c77b-d08c-43c3-b44e-ebc814ac51d8', 
 INSERT INTO `t_permission_menu` VALUES ('31e4e4e3-87c8-4ea2-bcc5-bc80028ee52b', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '39', '0');
 INSERT INTO `t_permission_menu` VALUES ('39e0c667-d398-4250-b04b-be4681b3c46c', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '24', '0');
 INSERT INTO `t_permission_menu` VALUES ('3a84c4f3-3a16-4c2f-90de-02eb9bc56b84', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '36', '0');
+INSERT INTO `t_permission_menu` VALUES ('3adb883f-7ae1-4614-865f-f2b977d81adc', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '8', '0');
 INSERT INTO `t_permission_menu` VALUES ('3f581921-6fef-40e9-b96a-9c733f6f0784', '49488b3d-5a83-420e-97f6-5686dd38d021', '35', '0');
 INSERT INTO `t_permission_menu` VALUES ('41c1f4f4-1940-4963-839e-b790bc9bbc21', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '1', '0');
 INSERT INTO `t_permission_menu` VALUES ('4462f9a7-157f-4d3c-b4ad-de89bd9fe5b0', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '22', '0');
@@ -163,6 +187,7 @@ INSERT INTO `t_permission_menu` VALUES ('471d129a-01a5-4a2e-b7c1-d81f28b6a612', 
 INSERT INTO `t_permission_menu` VALUES ('4a7ced47-6a0e-4915-97af-11d9dd7e9671', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '30', '0');
 INSERT INTO `t_permission_menu` VALUES ('4d40c912-f7e7-4679-9348-836367979c25', 'b9ef9e52-8978-4622-a97c-2b3296f0e9d2', '2', '0');
 INSERT INTO `t_permission_menu` VALUES ('5931bc8b-6453-40ed-ab23-50999ad3af91', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '44', '0');
+INSERT INTO `t_permission_menu` VALUES ('5fd67de0-69a3-48d8-acb3-6cdbf7d4d727', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '21', '0');
 INSERT INTO `t_permission_menu` VALUES ('6035a8e4-710b-409e-9de8-a7197ace388d', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '17', '0');
 INSERT INTO `t_permission_menu` VALUES ('608d0979-171d-490c-8ba7-2fbd6a3678c0', '48f42a98-bb0a-41bf-b55e-93044acd60f8', '40', '0');
 INSERT INTO `t_permission_menu` VALUES ('62801b0b-2672-4566-83c4-fa21d162be82', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '38', '0');
@@ -183,6 +208,7 @@ INSERT INTO `t_permission_menu` VALUES ('77ea1696-a116-4450-a0e3-cf57a9cd7c99', 
 INSERT INTO `t_permission_menu` VALUES ('7ce8356b-e971-40c1-9bf1-7abbcdbd01ae', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '7', '0');
 INSERT INTO `t_permission_menu` VALUES ('7d9f62b6-c00c-4a00-a899-dbd993c2519c', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '9', '0');
 INSERT INTO `t_permission_menu` VALUES ('8452ea67-b907-4edf-b76d-ef6e98eefb98', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '26', '0');
+INSERT INTO `t_permission_menu` VALUES ('84ae8dd1-e78e-4486-a9fe-6ca407098de9', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '23', '0');
 INSERT INTO `t_permission_menu` VALUES ('865ee93a-e608-4ee5-a8b0-21bb761e1ead', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '28', '0');
 INSERT INTO `t_permission_menu` VALUES ('8ed35307-ac4e-46cd-b1e8-34558c32f059', 'b9ef9e52-8978-4622-a97c-2b3296f0e9d2', '23', '0');
 INSERT INTO `t_permission_menu` VALUES ('8f5f20e0-9dde-4773-9e4b-d2b4332c4aaf', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '41', '0');
@@ -210,12 +236,16 @@ INSERT INTO `t_permission_menu` VALUES ('d23d60bb-c220-44c5-96f7-5da1fb9b7ac5', 
 INSERT INTO `t_permission_menu` VALUES ('d42788ca-5d0d-449b-8174-9806f9bcbeae', '0986c734-37d7-400a-a4f1-484531069440', '30', '0');
 INSERT INTO `t_permission_menu` VALUES ('d57b4bf1-a725-4078-9155-d115aa754b64', '48f42a98-bb0a-41bf-b55e-93044acd60f8', '17', '0');
 INSERT INTO `t_permission_menu` VALUES ('d6e85934-1e95-4bbb-aac1-a090882ceb0c', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '37', '0');
+INSERT INTO `t_permission_menu` VALUES ('d93b435f-41e2-4e30-b24f-3d3e2530b9b6', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '2', '0');
 INSERT INTO `t_permission_menu` VALUES ('dc7ad841-a9a7-4195-8dc4-996e0900c925', '0986c734-37d7-400a-a4f1-484531069440', '29', '0');
 INSERT INTO `t_permission_menu` VALUES ('e26f42f1-353e-4a62-abda-c14d4c74405a', '0986c734-37d7-400a-a4f1-484531069440', '11', '0');
 INSERT INTO `t_permission_menu` VALUES ('e2dfe88d-3601-443a-9de1-62267cbbf8f1', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '16', '0');
+INSERT INTO `t_permission_menu` VALUES ('e44e345f-b607-4f26-8af1-708c98d85ce2', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '6', '0');
 INSERT INTO `t_permission_menu` VALUES ('e51814b6-fcfa-4127-8a05-dec507946c7e', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '3', '0');
 INSERT INTO `t_permission_menu` VALUES ('e57a965f-5c78-4840-847e-84d454ddd3fc', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '46', '0');
 INSERT INTO `t_permission_menu` VALUES ('e5ba5ed2-01f3-4cc5-bb01-0ab504024765', '49488b3d-5a83-420e-97f6-5686dd38d021', '14', '0');
+INSERT INTO `t_permission_menu` VALUES ('e5cd88fd-1cd3-4c52-b615-97e1b045b924', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '24', '0');
+INSERT INTO `t_permission_menu` VALUES ('e8d2f93b-703d-4b36-bec3-6b840a87f7d4', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '1', '1');
 INSERT INTO `t_permission_menu` VALUES ('eae7ddf7-3485-4f49-baff-11e97aa733ba', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '32', '0');
 INSERT INTO `t_permission_menu` VALUES ('eaef6c73-bd55-431b-95c6-a8b5b92d50ac', '48f42a98-bb0a-41bf-b55e-93044acd60f8', '16', '0');
 INSERT INTO `t_permission_menu` VALUES ('f462d975-9cc8-4847-9b24-1548b062e204', 'b9ef9e52-8978-4622-a97c-2b3296f0e9d2', '24', '0');
@@ -223,6 +253,7 @@ INSERT INTO `t_permission_menu` VALUES ('f480998e-d6e1-48cb-8f10-956005591ad3', 
 INSERT INTO `t_permission_menu` VALUES ('f7b37a33-1085-45a6-851a-dfe26749ff36', '48f42a98-bb0a-41bf-b55e-93044acd60f8', '45', '0');
 INSERT INTO `t_permission_menu` VALUES ('f9e0f0b3-041f-41ff-adc3-e6b92f579509', '0986c734-37d7-400a-a4f1-484531069440', '9', '0');
 INSERT INTO `t_permission_menu` VALUES ('fa12d88e-d647-458a-9017-ae73eaad3f6d', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '10', '0');
+INSERT INTO `t_permission_menu` VALUES ('fc6fa5b5-dda6-4350-b085-629c481443f7', 'c88a015c-f14b-4cab-946b-ce64a1ecfb84', '22', '0');
 INSERT INTO `t_permission_menu` VALUES ('fc8094a9-e0b0-4714-9ddf-b53fb12aa156', '210857c0-659c-4ec6-9ffe-6c661faa82ab', '4', '0');
 
 -- ----------------------------

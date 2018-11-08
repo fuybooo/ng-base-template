@@ -48,7 +48,7 @@ export class IndexComponent implements OnInit {
           // 保存用户信息
           saveLoginInfo(res.data.results[0][0]);
           // 登录成功之后，跳转到首页
-          this.router.navigateByUrl('/main/permission/list');
+          this.router.navigateByUrl('/main/user/list');
         } else {
           this.message.error('用户名密码错误');
         }

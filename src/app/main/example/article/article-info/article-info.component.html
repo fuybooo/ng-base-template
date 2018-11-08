@@ -1,0 +1,18 @@
+<div>
+  <div class="f26">{{titleText}}</div>
+  <div nz-row>
+    <div nz-col [nzSpan]="24">
+      <app-form
+        [formId]="formId"
+        [formConfig]="formConfig"
+        [(form)]="form"
+        [formSize]="'small'"
+      ></app-form>
+      <div nz-row>
+        <div nz-col [nzOffset]="7" [nzSpan]="14" class="pl15i mt10">
+          <button nz-button [nzType]="'primary'" (click)="handleForm()" [disabled]="form.invalid || form.pristine">保存</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
